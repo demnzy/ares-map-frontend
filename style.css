@@ -11,6 +11,7 @@
     --muted: #b7c0c9;
     --ink: #10151a;
     --max: 1200px;
+    --mono: ui-monospace, 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
 }
 
 *,
@@ -181,8 +182,8 @@ button:focus-visible {
 
 .section .body {
     margin-top: 20px;
-    max-width: 620px;
-    font-size: 17px;
+    max-width: 740px;
+    font-size: 16.5px;
     line-height: 1.65;
     color: var(--muted);
 }
@@ -252,8 +253,8 @@ button:focus-visible {
 
 .hero-copy h1 {
     font-weight: 700;
-    font-size: clamp(2.8rem, 6.4vw, 4.5rem);
-    line-height: 1.05;
+    font-size: clamp(2.35rem, 4.8vw, 3.65rem);
+    line-height: 1.07;
 }
 
 .hero-copy h1 span {
@@ -261,10 +262,10 @@ button:focus-visible {
 }
 
 .lead {
-    margin-top: 28px;
-    max-width: 540px;
-    font-size: 20px;
-    line-height: 1.55;
+    margin-top: 24px;
+    max-width: 580px;
+    font-size: 18px;
+    line-height: 1.6;
     color: var(--muted);
 }
 
@@ -280,8 +281,10 @@ button:focus-visible {
 }
 
 .small {
-    margin-top: 32px;
-    font-size: 14px;
+    margin-top: 28px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.55;
     color: var(--muted);
 }
 
@@ -304,13 +307,14 @@ button:focus-visible {
 }
 
 /* ---------- Data sources strip ---------- */
-.strip { background: transparent; border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+.strip { background: rgba(27, 34, 42, 0.55); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
 .strip-inner {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 12px 40px;
-    padding: 28px 0;
+    justify-content: space-between;
+    gap: 12px 28px;
+    padding: 24px 0;
 }
 
 .strip-inner .eyebrow {
@@ -318,8 +322,9 @@ button:focus-visible {
 }
 
 .strip-inner p:not(.eyebrow) {
-    font-size: 15px;
-    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--sand);
 }
 
 /* ---------- Problem ---------- */
@@ -379,27 +384,31 @@ button:focus-visible {
 }
 
 .step {
-    flex: 1 1 280px;
+    flex: 1 1 240px;
     min-width: 0;
+    background: rgba(34, 42, 51, 0.72);
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    padding: 24px;
 }
 
 .num {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: var(--mono);
     font-weight: 700;
-    font-size: 64px;
-    line-height: 1;
-    color: var(--orange);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: var(--orange-soft);
 }
 
 .step h3 {
-    margin: 16px 0 10px;
+    margin: 12px 0 10px;
     font-weight: 600;
-    font-size: 26px;
+    font-size: 22px;
 }
 
 .step p:not(.num) {
-    font-size: 16px;
-    line-height: 1.65;
+    font-size: 15px;
+    line-height: 1.62;
     color: var(--muted);
 }
 
@@ -609,8 +618,7 @@ button:focus-visible {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    /* change to "contain" if you don't want any cropping */
+    object-fit: contain;
     object-position: center;
     opacity: 0;
 }
@@ -621,13 +629,17 @@ button:focus-visible {
 
 .slide figcaption {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 48px 24px 18px;
-    font-size: 15px;
+    left: 16px;
+    bottom: 14px;
+    max-width: calc(100% - 32px);
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(70, 83, 95, 0.8);
+    font-family: var(--mono);
+    font-size: 12.5px;
     color: var(--sand);
-    background: linear-gradient(to top, rgba(16, 21, 26, 0.85), rgba(16, 21, 26, 0));
+    background: rgba(16, 21, 26, 0.86);
+    backdrop-filter: blur(8px);
     opacity: 0;
 }
 
@@ -696,22 +708,231 @@ button:focus-visible {
 }
 
 .big {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: var(--mono);
     font-weight: 700;
-    font-size: 56px;
-    line-height: 1;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
     color: var(--orange);
 }
 
 .tile h3 {
-    margin: 16px 0 8px;
+    margin: 14px 0 10px;
     font-weight: 600;
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .tile p:not(.big) {
     font-size: 15px;
     line-height: 1.6;
+    color: var(--muted);
+}
+
+/* ---------- Technical Specs, Protocol & Formulas ---------- */
+.meta-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+}
+
+.pill {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--sand);
+    background: rgba(27, 34, 42, 0.72);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 5px 10px;
+}
+
+.pill strong {
+    color: var(--orange-soft);
+}
+
+.protocol-grid {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 24px;
+    align-items: stretch;
+}
+
+.tech-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+    min-width: 0;
+}
+
+.tech-card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.tech-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--sand);
+}
+
+.mono-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--orange-soft);
+    background: rgba(228, 100, 53, 0.12);
+    border: 1px solid rgba(228, 100, 53, 0.35);
+    border-radius: 5px;
+    padding: 3px 8px;
+}
+
+.code-block {
+    background: var(--bg-darker);
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #d9e2ec;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.code-label {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 14px 0 6px;
+}
+
+.code-label:first-of-type {
+    margin-top: 0;
+}
+
+.spec-table-wrap {
+    margin-top: 32px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow-x: auto;
+}
+
+.spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+}
+
+.spec-table th,
+.spec-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: middle;
+}
+
+.spec-table thead th {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    background: rgba(27, 34, 42, 0.65);
+}
+
+.spec-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.spec-table td.num-cell {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--sand);
+    white-space: nowrap;
+}
+
+.spec-table td.r2-cell {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: #8fd6c0;
+}
+
+.spec-table code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--orange-soft);
+}
+
+.spec-summary-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.stat-box {
+    background: rgba(34, 42, 51, 0.78);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+}
+
+.stat-box .k {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+
+.stat-box .v {
+    margin-top: 6px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--sand);
+}
+
+.stat-box .s {
+    margin-top: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--orange-soft);
+}
+
+.formula-code {
+    margin-top: 14px;
+    padding: 10px 12px;
+    border-radius: 7px;
+    background: var(--bg-darker);
+    border: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: #d6e1ec;
+    overflow-x: auto;
+}
+
+.spot-meta {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--orange-soft);
+}
+
+.m-level {
+    font-family: var(--mono);
+    font-size: 13px;
+    text-align: right;
     color: var(--muted);
 }
 
