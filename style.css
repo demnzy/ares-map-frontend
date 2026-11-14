@@ -240,21 +240,20 @@ button:focus-visible {
 .hero { display: flex; align-items: center; padding: 24px 0 72px; }
 
 .hero-inner {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.85fr);
     align-items: center;
-    gap: 48px;
+    gap: 40px;
 }
 
 .hero-copy {
-    flex: 1 1 520px;
     min-width: 0;
 }
 
 .hero-copy h1 {
     font-weight: 700;
-    font-size: clamp(2.35rem, 4.8vw, 3.65rem);
-    line-height: 1.07;
+    font-size: clamp(2.6rem, 5.6vw, 4.2rem);
+    line-height: 1.06;
 }
 
 .hero-copy h1 span {
@@ -263,14 +262,14 @@ button:focus-visible {
 
 .lead {
     margin-top: 24px;
-    max-width: 580px;
-    font-size: 18px;
-    line-height: 1.6;
+    max-width: 560px;
+    font-size: 19px;
+    line-height: 1.58;
     color: var(--muted);
 }
 
 .cta-row {
-    margin-top: 36px;
+    margin-top: 32px;
     display: flex;
     flex-wrap: wrap;
     gap: 14px;
@@ -282,14 +281,12 @@ button:focus-visible {
 
 .small {
     margin-top: 28px;
-    font-family: var(--mono);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.55;
     color: var(--muted);
 }
 
 .hero-logo {
-    flex: 1 1 320px;
     min-width: 0;
     display: flex;
     justify-content: center;
@@ -307,14 +304,13 @@ button:focus-visible {
 }
 
 /* ---------- Data sources strip ---------- */
-.strip { background: rgba(27, 34, 42, 0.55); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+.strip { background: transparent; border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
 .strip-inner {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px 28px;
-    padding: 24px 0;
+    gap: 12px 40px;
+    padding: 26px 0;
 }
 
 .strip-inner .eyebrow {
@@ -322,9 +318,8 @@ button:focus-visible {
 }
 
 .strip-inner p:not(.eyebrow) {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--sand);
+    font-size: 15px;
+    color: var(--muted);
 }
 
 /* ---------- Problem ---------- */
@@ -384,31 +379,30 @@ button:focus-visible {
 }
 
 .step {
-    flex: 1 1 240px;
+    flex: 1 1 230px;
     min-width: 0;
-    background: rgba(34, 42, 51, 0.72);
-    border: 1px solid var(--line-soft);
-    border-radius: 12px;
-    padding: 24px;
+    background: transparent;
+    border: none;
+    padding: 0;
 }
 
 .num {
-    font-family: var(--mono);
+    font-family: 'Josefin Sans', sans-serif;
     font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.08em;
-    color: var(--orange-soft);
+    font-size: 56px;
+    line-height: 1;
+    color: var(--orange);
 }
 
 .step h3 {
-    margin: 12px 0 10px;
+    margin: 16px 0 10px;
     font-weight: 600;
-    font-size: 22px;
+    font-size: 24px;
 }
 
 .step p:not(.num) {
-    font-size: 15px;
-    line-height: 1.62;
+    font-size: 15.5px;
+    line-height: 1.65;
     color: var(--muted);
 }
 
@@ -759,7 +753,9 @@ button:focus-visible {
 }
 
 .tech-card {
-    background: var(--surface);
+    background: rgba(50, 62, 74, 0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 24px;
@@ -819,7 +815,9 @@ button:focus-visible {
 
 .spec-table-wrap {
     margin-top: 32px;
-    background: var(--surface);
+    background: rgba(50, 62, 74, 0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border: 1px solid var(--line);
     border-radius: 12px;
     overflow-x: auto;
@@ -880,7 +878,9 @@ button:focus-visible {
 }
 
 .stat-box {
-    background: rgba(34, 42, 51, 0.78);
+    background: rgba(50, 62, 74, 0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border: 1px solid var(--line);
     border-radius: 10px;
     padding: 16px 18px;
@@ -986,6 +986,20 @@ button:focus-visible {
 }
 
 /* ---------- Responsive ---------- */
+.layer-inputs {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+.layer-inputs strong {
+    color: var(--sand);
+    font-weight: 600;
+}
+
 @media (max-width: 700px) {
     .nav-links a:not(.btn) {
         display: none;
@@ -997,6 +1011,10 @@ button:focus-visible {
 
     .hero {
         padding-bottom: 80px;
+    }
+
+    .hero-inner {
+        grid-template-columns: 1fr;
     }
 
     .hero-logo {

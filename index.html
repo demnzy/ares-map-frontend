@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARES-MAP | Sol Searchers — Autonomous Reconnaissance &amp; EVA Surface Mapping</title>
-    <meta name="description" content="ARES-MAP couples a PyTorch diurnal-seasonal neural regressor trained on NASA PDS Perseverance MEDA and Curiosity RAD archives with sub-meter HiRISE DTMs to synthesize packed 32-bit RGBA hazard masks for Jezero Crater EVA surface reconstruction.">
+    <title>ARES-MAP | Sol Searchers</title>
+    <meta name="description" content="ARES-MAP turns NASA Perseverance, Curiosity, and HiRISE terrain data into a 3D hazard map of Jezero Crater so astronauts can plan safer Marswalks.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -26,12 +26,12 @@
                 <span>SOL SEARCHERS</span>
             </a>
             <nav class="nav-links" aria-label="Main">
-                <a href="#problem">Problem &amp; Site</a>
-                <a href="#how">Pipeline &amp; API</a>
-                <a href="#specs">ML &amp; PDS Specs</a>
-                <a href="#layers">RGBA Synthesis</a>
-                <a href="#simulator">Terrain &amp; Layers</a>
-                <a href="#simulator" class="btn btn-main btn-sm">View Layer Outputs</a>
+                <a href="#problem">The problem</a>
+                <a href="#how">How it works</a>
+                <a href="#layers">Hazard layers</a>
+                <a href="#simulator">Terrain &amp; maps</a>
+                <a href="#specs">Tech specs</a>
+                <a href="#simulator" class="btn btn-main btn-sm">See the maps</a>
             </nav>
         </div>
     </header>
@@ -42,23 +42,19 @@
         <section class="hero">
             <div class="wrap hero-inner">
                 <div class="hero-copy">
-                    <p class="eyebrow">NASA Space Apps Challenge · Autonomous Reconnaissance &amp; EVA Surface Mapping</p>
-                    <h1>Tactical 3D surface &amp; hazard forecasting for <span>Jezero Crater.</span></h1>
-                    <p class="lead">ARES-MAP pairs a PyTorch diurnal-seasonal neural regressor—trained on NASA PDS Perseverance MEDA and Curiosity RAD records—with sub-meter HiRISE Digital Terrain Models to synthesize packed 32-bit RGBA hazard textures for real-time 3D EVA surface reconstruction.</p>
-                    <div class="meta-pills">
-                        <span class="pill"><strong>Site:</strong> 18.38°N, 77.58°E (Western Delta)</span>
-                        <span class="pill"><strong>Mean R²:</strong> 0.9088 (503 PDS val bins)</span>
-                        <span class="pill"><strong>p50 Latency:</strong> 2.71 ms ML · 22.70 ms RGBA</span>
-                    </div>
+                    <p class="eyebrow">NASA Space Apps Challenge 2026</p>
+                    <h1>Plan a safe <span>Marswalk</span> before you step outside.</h1>
+                    <p class="lead">ARES-MAP turns weather, radiation, and terrain data from NASA's Mars missions into a 3D hazard map of Jezero Crater, helping astronauts check surface conditions for any Martian day and hour.</p>
                     <div class="cta-row">
-                        <a href="#simulator" class="btn btn-main">Inspect Terrain &amp; Hazard Layers</a>
-                        <a href="#specs" class="btn btn-line">Technical Specifications</a>
+                        <a href="#simulator" class="btn btn-main">Explore the hazard maps</a>
+                        <a href="#specs" class="btn btn-line">Jump to technical specs</a>
                     </div>
-                    <p class="small">DTM Source: HiRISE DTEEC_045994_1985_046060_1985_U01 (4,135.6 × 4,135.6 m · 164.36 m relief) &amp; 45 × 45 km Regional Jezero DEM.</p>
+                    <p class="small">Landing site: Jezero Crater's western delta (18.38°N, 77.58°E), built from Perseverance weather logs, Curiosity radiation readings, and 1-meter HiRISE elevation maps.</p>
                 </div>
                 <div class="hero-logo">
+                    <!-- The whole sun drifts toward the cursor. The lines inside it never move on their own. -->
                     <div class="sun" id="sun">
-                        <img src="logo.png" alt="Sol Searchers emblem">
+                        <img src="logo.png" alt="Sol Searchers Mars emblem">
                     </div>
                 </div>
             </div>
@@ -67,86 +63,342 @@
         <!-- DATA SOURCES STRIP -->
         <section class="strip">
             <div class="wrap strip-inner">
-                <p class="eyebrow">NASA PDS Corpus &amp; Engine</p>
-                <p>Perseverance MEDA (CAL_TIRS · DER_PS · DER_WS)</p>
-                <p>Curiosity RAD (MSL-M-RAD-3-RDR-V1.0 · 1,370 bins)</p>
-                <p>HiRISE Stereo DTM (4096×4096 16-bit · 1.01 m/px)</p>
-                <p>PyTorch MarsEnvMLP + FastAPI RGBA Bridge</p>
+                <p class="eyebrow">Built with NASA data</p>
+                <p>Perseverance MEDA weather station</p>
+                <p>Curiosity RAD radiation detector</p>
+                <p>HiRISE 3D terrain heightmaps (1 m/px)</p>
+                <p>PyTorch forecast model + FastAPI backend</p>
             </div>
         </section>
 
-        <!-- PROBLEM & TARGET SITE -->
+        <!-- PROBLEM & SITE -->
         <section id="problem" class="section">
             <div class="wrap split">
                 <div class="split-text">
-                    <p class="eyebrow">1. Problem Statement &amp; Target Site</p>
-                    <h2>Orbital maps are static 2D rasters. Surface EVAs face dynamic 3D hazards.</h2>
-                    <p class="body">Existing planetary visualization tools such as JPL Mars Trek serve macro-scale orbital science on static 2D projections. Crew executing surface Extravehicular Activities (EVAs) require localized 3D topography coupled with hour-by-hour environmental modeling—where solar elevation angle, local slope gradients, horizon sky-view occlusion, and atmospheric dust dynamically dictate traversal safety.</p>
-                    <p class="body"><strong>Why Jezero Crater (Western Delta):</strong> Selected for having the richest co-located multi-instrument dataset on Mars. Our pipeline ingests sub-meter HiRISE stereophotogrammetry (<code style="font-family:var(--mono);color:var(--orange-soft)">PSP_003798_1985</code> / <code style="font-family:var(--mono);color:var(--orange-soft)">DTEEC_045994_1985_046060_1985_U01</code>, spanning <code style="font-family:var(--mono)">-2,614.1 m</code> to <code style="font-family:var(--mono)">-2,449.7 m</code> elevation) alongside a <code style="font-family:var(--mono)">45 × 45 km</code> regional DEM across the lacustrine delta fan and Perseverance meteorology records.</p>
+                    <p class="eyebrow">The problem</p>
+                    <h2>Existing Mars maps are flat and static. Conditions on the ground change every hour.</h2>
+                    <p class="body">Tools like JPL Mars Trek are great for viewing Mars from orbit, but they are flat 2D maps. An astronaut planning a four-hour walk needs to know what conditions will look like on the ground at a specific spot and hour.</p>
+                    <p class="body">We focused on Jezero Crater's western delta because it gives us the best overlap of real surface weather from Perseverance and 1-meter 3D elevation maps from the Mars Reconnaissance Orbiter.</p>
                 </div>
                 <div class="stack">
                     <div class="fact">
                         <svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 22V9a4 4 0 0 1 8 0v13a7 7 0 1 1-8 0Z"/><path d="M20 15v12"/></svg>
                         <div>
-                            <h3>Diurnal thermal extremes (−92.0°C to +18.6°C)</h3>
-                            <p>Across 25 MEDA reference sols (Sols 1–1321), ground temperature drops to −92.03°C (median −60.10°C) while air temperature spans −87.51°C to +18.59°C. Shadowed scarps and katabatic basins drive suit heater load spikes.</p>
+                            <h3>Extreme cold swings (−92°C to +19°C)</h3>
+                            <p>In Perseverance's weather logs, ground temperatures drop to −92°C before dawn and warm above freezing at midday. Walking into shadowed crater walls drains suit heaters fast.</p>
                         </div>
                     </div>
                     <div class="fact">
                         <svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14h18a4 4 0 1 0-4-4"/><path d="M6 21h26a4 4 0 1 1-4 4"/><path d="M6 28h12a3 3 0 1 1-3 3"/></svg>
                         <div>
-                            <h3>Dust optical depth &amp; drift (τ = 0.180 – 2.508)</h3>
-                            <p>Derived from MEDA CAL_TIRS downward longwave atmospheric emissivity and seasonal perihelion dust loading (median τ = 0.628), coupled with DER_WS winds (0.30–8.97 m/s) that advect sand across low basins.</p>
+                            <h3>Dust that cuts visibility (τ = 0.18 to 2.51)</h3>
+                            <p>Wind lifts fine dust into low basins and cuts how far crew can see and how much power solar panels generate.</p>
                         </div>
                     </div>
                     <div class="fact">
                         <svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="20" r="6"/><path d="M20 4v6M20 30v6M4 20h6M30 20h6M9 9l4 4M27 27l4 4M31 9l-4 4M13 27l-4 4"/></svg>
                         <div>
-                            <h3>Unshielded ionizing dose (9.65 – 12.98 µGy/hr)</h3>
-                            <p>With no global magnetic dipole and thin CO₂ column pressure (622.85–807.61 Pa in DER_PS), Curiosity RAD observations track persistent galactic cosmic ray flux peaking on ridges with high Sky-View Factor.</p>
+                            <h3>Unshielded radiation (9.7 to 13.0 µGy/hr)</h3>
+                            <p>Mars has no global magnetic field and a thin atmosphere (623 to 808 Pa). Open ridges take the full cosmic ray dose, while crater walls offer partial cover.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SYSTEM ARCHITECTURE & INTERMEDIARY PROTOCOL -->
+        <!-- HOW IT WORKS -->
         <section id="how" class="section band">
             <div class="wrap">
-                <p class="eyebrow">2. System Architecture &amp; Intermediary Protocol</p>
-                <h2>Four-stage pipeline from NASA PDS archives to 3D shader unpacking.</h2>
-                <p class="body">The 3D rendering engine never parses raw planetary archives directly. Instead, a decoupled Python FastAPI backend executes PyTorch temporal inference, fuses predicted environmental scalars with cached HiRISE topographic derivatives, and streams a single 32-bit RGBA PNG texture over REST.</p>
-
+                <p class="eyebrow">How it works</p>
+                <h2>From NASA rover logs to a 3D surface map in four steps.</h2>
                 <div class="steps">
                     <div class="step">
-                        <p class="num">01 · EPHEMERIS</p>
-                        <h3>Keplerian Ls &amp; 9D Harmonic Features</h3>
-                        <p>Solves Kepler's equation (P = 668.5991 sols, e = 0.0934) to map target Sol to Solar Longitude Ls, building a 9-dim vector of 1st/2nd diurnal and seasonal sin/cos modes plus mission drift (sol / 1340).</p>
+                        <p class="num">1</p>
+                        <h3>Pick a day and time</h3>
+                        <p>Choose a Martian day (Sol) and hour of the day at Jezero Crater.</p>
                     </div>
                     <div class="step">
-                        <p class="num">02 · PYTORCH ML</p>
-                        <h3>MarsEnvMLP Residual Regressor</h3>
-                        <p>Pre-norm residual network (9 → 128 → 2×ResBlock(128, LayerNorm, SiLU, Dropout 0.05) → 64 → 7) outputting telemetry scalars plus unit-circle (sin, cos) wind components recombined via atan2 in 2.71 ms p50.</p>
+                        <p class="num">2</p>
+                        <h3>Predict the weather</h3>
+                        <p>A PyTorch neural network trained on 2,511 NASA weather and radiation rows predicts temperature, dust thickness, radiation, and wind in under 3 milliseconds.</p>
                     </div>
                     <div class="step">
-                        <p class="num">03 · SYNTHESIZER</p>
-                        <h3>32-Bit RGBA Mask Bridge</h3>
-                        <p>JezeroHazardSynthesizer combines predicted scalars with cached HiRISE elevation gradients (dx, dy), slope angles, and dual-radius Sky-View Factor (SVF) into a single packed RGBA PNG returned via POST /api/forecast.</p>
+                        <p class="num">3</p>
+                        <h3>Pack four hazards into one image</h3>
+                        <p>Our FastAPI server combines the forecast with HiRISE elevation slopes and shadows, packing all four hazard scores into the Red, Green, Blue, and Alpha channels of one PNG.</p>
                     </div>
                     <div class="step">
-                        <p class="num">04 · 3D ENGINE</p>
-                        <h3>WebGL 2 Terrain &amp; Shader Unpack</h3>
-                        <p>The 3D simulator (built separately in Godot 4 Compatibility / WebGL 2) displaces static 4096×4096 16-bit heightmaps, unpacks RGBA channels in ares_terrain.gdshader, binds τ to volumetric fog, and rotates sunlight to LMST.</p>
+                        <p class="num">4</p>
+                        <h3>Load into the 3D simulator</h3>
+                        <p>The 3D terrain engine drapes that RGBA image over a 4096×4096 heightmap of Jezero Crater to color-code danger zones and plan safe walking routes.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HAZARD LAYERS -->
+        <section id="layers" class="section">
+            <div class="wrap">
+                <p class="eyebrow">Hazard layers</p>
+                <h2>Four hazards packed into one RGBA image.</h2>
+                <p class="body">Instead of sending four separate files to the 3D engine, the backend packs all four hazard layers into one PNG image (dynamic_hazard_mask.png). Every pixel stores a score from 0 (safe) to 1 (high risk) in its red, green, blue, and alpha channels.</p>
+                <div class="cards">
+                    <article class="card">
+                        <div class="thumb thumb-thermal"></div>
+                        <div class="card-body">
+                            <div class="chan" style="--c:#7FDCEC"><b>R</b><span><strong>Red channel</strong>0 warm, 1 freezing</span></div>
+                            <h3 style="color:#7FDCEC">Thermal</h3>
+                            <p>Highlights dangerously cold spots, such as shadowed crater walls and low basins where cold air settles overnight.</p>
+                            <p class="layer-inputs"><strong>Inputs:</strong> ground temperature forecast, sun angle shadows, elevation, and night cooling.</p>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <div class="thumb thumb-dust"></div>
+                        <div class="card-body">
+                            <div class="chan" style="--c:#E8B755"><b>G</b><span><strong>Green channel</strong>0 clear, 1 heavy dust</span></div>
+                            <h3 style="color:#E8B755">Dust</h3>
+                            <p>Shows where blowing dust builds up and cuts visibility along the predicted wind direction.</p>
+                            <p class="layer-inputs"><strong>Inputs:</strong> dust optical depth (τ), wind speed, wind bearing, and low-ground settling.</p>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <div class="thumb thumb-radiation"></div>
+                        <div class="card-body">
+                            <div class="chan" style="--c:#FF8A90"><b>B</b><span><strong>Blue channel</strong>0 sheltered, 1 exposed</span></div>
+                            <h3 style="color:#FF8A90">Radiation</h3>
+                            <p>Maps cosmic ray exposure, which stays higher on open ridges and drops inside steep crater walls.</p>
+                            <p class="layer-inputs"><strong>Inputs:</strong> radiation dose forecast, ground elevation, and open-sky view factor.</p>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <div class="thumb thumb-slope"></div>
+                        <div class="card-body">
+                            <div class="chan" style="--c:#EDE6DD"><b>A</b><span><strong>Alpha channel</strong>0 flat, 1 blocked (≥15°)</span></div>
+                            <h3>Slope</h3>
+                            <p>Flags ground steeper than 15 degrees, where a bulky pressurized suit can tip over.</p>
+                            <p class="layer-inputs"><strong>Inputs:</strong> HiRISE elevation gradients (1 m/px) normalized to the 15° tipping limit.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- THREE REAL SPOTS -->
+        <section id="spots" class="section spots">
+            <div class="wrap">
+                <p class="eyebrow">How the map scores the ground</p>
+                <h2>Three real spots in Jezero Crater at Sol 620 (14:00).</h2>
+                <p class="body">Here are actual pixel values from our 1024×1024 Jezero delta map at 2:00 PM local Mars time (Ls 339.7°, ground temp −11.9°C, dust τ 0.46, radiation 11.8 µGy/hr).</p>
+
+                <div class="cards spot-list">
+                    <article class="spot">
+                        <span class="verdict verdict-safe">Safe to walk</span>
+                        <h3>Sunlit crater floor</h3>
+                        <p class="spot-meta">Elevation −2,584 m · Slope 1.2° · Open sky 100%</p>
+                        <ul class="meters">
+                            <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:16%;background:#5fd4e8"></i></span><span class="m-level">0.16</span></li>
+                            <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:10%;background:#e8b755"></i></span><span class="m-level">0.10</span></li>
+                            <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:47%;background:#ff8a90"></i></span><span class="m-level">0.47</span></li>
+                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:8%;background:#ede6dd"></i></span><span class="m-level">0.08</span></li>
+                        </ul>
+                        <p class="spot-result"><strong>Route planner:</strong> easy afternoon walk. Before dawn at 04:00 (−82.3°C), cold air settling in this basin pushes Thermal up to <strong>0.82</strong>.</p>
+                    </article>
+
+                    <article class="spot">
+                        <span class="verdict verdict-block">Blocked (A = 1.00)</span>
+                        <h3>Steep delta cliff</h3>
+                        <p class="spot-meta">Elevation −2,506 m · Slope 58.4° · Open sky 52%</p>
+                        <ul class="meters">
+                            <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:18%;background:#5fd4e8"></i></span><span class="m-level">0.18</span></li>
+                            <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:4%;background:#e8b755"></i></span><span class="m-level">0.04</span></li>
+                            <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:53%;background:#ff8a90"></i></span><span class="m-level">0.53</span></li>
+                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:100%;background:#fde047"></i></span><span class="m-level is-high">1.00</span></li>
+                        </ul>
+                        <p class="spot-result"><strong>Route planner:</strong> impassable. Anything 15° or steeper clamps Slope to <strong>1.00</strong>, blocks routes across it, and adds warning stripes.</p>
+                    </article>
+
+                    <article class="spot">
+                        <span class="verdict verdict-risk">High radiation</span>
+                        <h3>Exposed rim crest</h3>
+                        <p class="spot-meta">Elevation −2,469 m · Slope 6.8° · Open sky 99%</p>
+                        <ul class="meters">
+                            <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:13%;background:#5fd4e8"></i></span><span class="m-level">0.13</span></li>
+                            <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:9%;background:#e8b755"></i></span><span class="m-level">0.09</span></li>
+                            <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:74%;background:#ff8a90"></i></span><span class="m-level is-high">0.74</span></li>
+                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:45%;background:#ede6dd"></i></span><span class="m-level">0.45</span></li>
+                        </ul>
+                        <p class="spot-result"><strong>Route planner:</strong> walkable slope, but high elevation and 99% sky exposure push Radiation near the map maximum (<strong>0.75</strong>), so routes try to skirt around it.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- TERRAIN & LAYER OUTPUTS -->
+        <section id="simulator" class="section band">
+            <div class="wrap">
+                <p class="eyebrow">Terrain and hazard map outputs</p>
+                <h2>What our pipeline generates for the 3D simulator.</h2>
+                <p class="body">Our team is building the main interactive 3D simulator separately. Click through the tabs below to inspect the Jezero Crater terrain meshes, each of the four synthesized RGBA hazard channels, and our weather model's test results against NASA data.</p>
+
+                <div class="sim" id="sim">
+                    <div class="sim-tabs" role="group" aria-label="Terrain and hazard layer outputs">
+                        <button type="button" class="sim-tab is-active" data-slide="terrain" aria-pressed="true">3D Terrain</button>
+                        <button type="button" class="sim-tab" data-slide="thermal" aria-pressed="false">Cold (R)</button>
+                        <button type="button" class="sim-tab" data-slide="dust" aria-pressed="false">Dust (G)</button>
+                        <button type="button" class="sim-tab" data-slide="radiation" aria-pressed="false">Radiation (B)</button>
+                        <button type="button" class="sim-tab" data-slide="slope" aria-pressed="false">Slope (A)</button>
+                        <button type="button" class="sim-tab" data-slide="validation" aria-pressed="false">Model Validation</button>
+                    </div>
+
+                    <div class="sim-stage">
+                        <figure class="slide is-active" data-slide="terrain">
+                            <img src="images/terrain.png" alt="3D terrain view of Jezero Crater western delta and full 45 km crater">
+                            <div class="slide-empty"><strong>3D Terrain</strong><span>images/terrain.png not found</span></div>
+                            <figcaption>3D terrain built from NASA HiRISE 1 m/px delta data (4.1 × 4.1 km) and regional 45 × 45 km crater elevation.</figcaption>
+                        </figure>
+
+                        <figure class="slide" data-slide="thermal">
+                            <img src="images/thermal.png" alt="Red channel cold hazard map at Sol 620, 04:00 local time">
+                            <div class="slide-empty"><strong>Cold (R)</strong><span>images/thermal.png not found</span></div>
+                            <figcaption>Red channel (Sol 620, 04:00, ground temp −82.3°C): shadowed slopes and low cold basins highlighted in cyan.</figcaption>
+                        </figure>
+
+                        <figure class="slide" data-slide="dust">
+                            <img src="images/dust.png" alt="Green channel dust and wind drift map at Sol 620, 04:00 local time">
+                            <div class="slide-empty"><strong>Dust (G)</strong><span>images/dust.png not found</span></div>
+                            <figcaption>Green channel (Sol 620, 04:00, optical depth 1.11): wind-driven dust bands settling in low terrain.</figcaption>
+                        </figure>
+
+                        <figure class="slide" data-slide="radiation">
+                            <img src="images/radiation.png" alt="Blue channel radiation exposure map at Sol 620, 14:00 local time">
+                            <div class="slide-empty"><strong>Radiation (B)</strong><span>images/radiation.png not found</span></div>
+                            <figcaption>Blue channel (Sol 620, 14:00, 11.8 µGy/hr): higher cosmic dose on exposed ridges, lower behind crater walls.</figcaption>
+                        </figure>
+
+                        <figure class="slide" data-slide="slope">
+                            <img src="images/slope.png" alt="Alpha channel slope map highlighting cliffs steeper than 15 degrees">
+                            <div class="slide-empty"><strong>Slope (A)</strong><span>images/slope.png not found</span></div>
+                            <figcaption>Alpha channel: yellow zones mark slopes 15° or steeper (1.48% of the 1024×1024 delta map; steepest cliff 63.5°).</figcaption>
+                        </figure>
+
+                        <figure class="slide" data-slide="validation">
+                            <img src="images/ml_validation.png" alt="PyTorch MarsEnvMLP validation plots compared to NASA Perseverance and Curiosity measurements">
+                            <div class="slide-empty"><strong>Model Validation</strong><span>images/ml_validation.png not found</span></div>
+                            <figcaption>Weather model predictions compared against held-out NASA Perseverance MEDA and Curiosity RAD measurements (average R² = 0.91).</figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="captions">
+                    <p><span>Real NASA elevation:</span> Built from HiRISE PDS .IMG elevation files and 4096×4096 16-bit heightmaps.</p>
+                    <p><span>Single RGBA payload:</span> One PNG file carries all four hazard scores for fast GPU shader sampling.</p>
+                    <p><span>Engine ready:</span> Exported to feed the Godot 4 WebGL 2 simulator and route planner.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TECHNICAL SPECIFICATIONS -->
+        <section id="specs" class="section">
+            <div class="wrap">
+                <p class="eyebrow">Technical specifications</p>
+                <h2>Under the hood: data, model accuracy, and API speed.</h2>
+                <p class="body">Here is the exact engineering breakdown for judges and developers: the NASA dataset compiled from Perseverance MEDA and Curiosity RAD, held-out test scores for our PyTorch weather model (MarsEnvMLP), and response times from the FastAPI server.</p>
+
+                <div class="spec-summary-grid">
+                    <div class="stat-box">
+                        <div class="k">Training Dataset</div>
+                        <div class="v">2,511 Rows</div>
+                        <div class="s">903 NASA bins + 1,608 harmonic grid</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="k">Mean Accuracy</div>
+                        <div class="v">R² = 0.91</div>
+                        <div class="s">0.9088 across 503 test samples</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="k">ML Inference</div>
+                        <div class="v">2.71 ms</div>
+                        <div class="s">Median CPU time (9 → 128 → 7 MLP)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="k">Mask Synthesis</div>
+                        <div class="v">22.70 ms</div>
+                        <div class="s">Median 256×256 RGBA PNG build</div>
+                    </div>
+                </div>
+
+                <div class="spec-table-wrap">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>Predicted Variable</th>
+                                <th>Error (MAE)</th>
+                                <th>RMSE</th>
+                                <th>Accuracy (R²)</th>
+                                <th>Observed NASA Range</th>
+                                <th>Data Source</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ground_temp_c</code></td>
+                                <td class="num-cell">2.50 °C</td>
+                                <td class="num-cell">3.51 °C</td>
+                                <td class="r2-cell">0.985</td>
+                                <td class="num-cell">−92.0 to +12.5 °C</td>
+                                <td>Perseverance MEDA (CAL_TIRS, 25 sols: Sol 1–1321)</td>
+                            </tr>
+                            <tr>
+                                <td><code>air_temp_c</code></td>
+                                <td class="num-cell">2.00 °C</td>
+                                <td class="num-cell">4.26 °C</td>
+                                <td class="r2-cell">0.941</td>
+                                <td class="num-cell">−87.5 to +18.6 °C</td>
+                                <td>Perseverance MEDA (CAL_TIRS)</td>
+                            </tr>
+                            <tr>
+                                <td><code>dust_optical_depth_tau</code></td>
+                                <td class="num-cell">0.071</td>
+                                <td class="num-cell">0.106</td>
+                                <td class="r2-cell">0.933</td>
+                                <td class="num-cell">0.180 to 2.508</td>
+                                <td>MEDA TIRS longwave emissivity + seasonal dust cycle</td>
+                            </tr>
+                            <tr>
+                                <td><code>radiation_dose_rate_ugy_hr</code></td>
+                                <td class="num-cell">0.11 µGy/hr</td>
+                                <td class="num-cell">0.23 µGy/hr</td>
+                                <td class="r2-cell">0.753</td>
+                                <td class="num-cell">9.65 to 12.98 µGy/hr</td>
+                                <td>Curiosity RAD (1,370 records) + MEDA pressure shielding</td>
+                            </tr>
+                            <tr>
+                                <td><code>wind_speed_mps</code></td>
+                                <td class="num-cell">0.21 m/s</td>
+                                <td class="num-cell">0.38 m/s</td>
+                                <td class="r2-cell">0.933</td>
+                                <td class="num-cell">0.30 to 8.97 m/s</td>
+                                <td>MEDA DER_WS (≤ Sol 315) + harmonic gap fill</td>
+                            </tr>
+                            <tr>
+                                <td><code>wind_bearing_deg</code></td>
+                                <td class="num-cell">7.73°</td>
+                                <td class="num-cell">20.90°</td>
+                                <td class="r2-cell">0.963</td>
+                                <td class="num-cell">0° to 360°</td>
+                                <td>Predicted as sin/cos vector and combined via atan2</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="protocol-grid">
                     <div class="tech-card">
                         <div class="tech-card-head">
-                            <h3>Intermediary REST Contract</h3>
+                            <h3>FastAPI Contract</h3>
                             <span class="mono-tag">POST /api/forecast</span>
                         </div>
-                        <p class="code-label">Request JSON (backend/api.py)</p>
+                        <p class="code-label">Request JSON</p>
                         <pre class="code-block">{
   "sol": 620,
   "hour": 14.5,
@@ -154,14 +406,12 @@
   "mask_size": 256,
   "include_mask": true
 }</pre>
-                        <p class="code-label">HTTP 200 Response (Verified MarsEnvMLP Output)</p>
+                        <p class="code-label">Response JSON (verified output)</p>
                         <pre class="code-block">{
   "status": "success",
   "sol": 620,
   "hour": 14.5,
   "solar_longitude_ls": 339.72,
-  "model_source": "PyTorch MarsEnvMLP (NASA PDS MEDA + MSL RAD)",
-  "inference_ms": 18.98,
   "telemetry": {
     "ground_temp_c": -14.62,
     "air_temp_c": -39.1,
@@ -176,19 +426,19 @@
 
                     <div class="tech-card">
                         <div class="tech-card-head">
-                            <h3>CPU Inference &amp; Synthesis Benchmarks</h3>
-                            <span class="mono-tag">Warm HiRISE Cache</span>
+                            <h3>CPU Speed Benchmarks</h3>
+                            <span class="mono-tag">Warm DTM Cache</span>
                         </div>
-                        <p style="font-size:14.5px; color:var(--muted); margin-bottom:16px;">Measured on CPU after warming the HiRISE DTM slope and SVF cache (1,997.6 ms cold start). Companion endpoints <code style="font-family:var(--mono);color:var(--orange-soft)">GET /api/health</code> and <code style="font-family:var(--mono);color:var(--orange-soft)">GET /api/metrics</code> expose runtime status and training metadata.</p>
+                        <p style="font-size:14.5px; color:var(--muted); margin-bottom:16px;">Measured on CPU after warming the HiRISE slope cache (1,997.6 ms cold start). Health and validation stats are also served at GET /api/health and GET /api/metrics.</p>
                         <div class="spec-table-wrap" style="margin-top:0;">
                             <table class="spec-table">
                                 <thead>
                                     <tr>
                                         <th>Operation</th>
                                         <th>Mean</th>
-                                        <th>p50</th>
+                                        <th>Median</th>
                                         <th>p95</th>
-                                        <th>Payload</th>
+                                        <th>Output</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -221,18 +471,18 @@
                                         <td class="num-cell">2,572.0 KB PNG</td>
                                     </tr>
                                     <tr>
-                                        <td><code>POST /api/forecast</code> (no mask)</td>
+                                        <td><code>POST /api/forecast</code> (JSON only)</td>
                                         <td class="num-cell">15.93 ms</td>
                                         <td class="num-cell">15.58 ms</td>
                                         <td class="num-cell">19.58 ms</td>
-                                        <td class="num-cell">3.52 ms srv</td>
+                                        <td class="num-cell">3.52 ms server</td>
                                     </tr>
                                     <tr>
                                         <td><code>POST /api/forecast</code> (256 mask)</td>
                                         <td class="num-cell">29.50 ms</td>
                                         <td class="num-cell">27.93 ms</td>
                                         <td class="num-cell">36.62 ms</td>
-                                        <td class="num-cell">18.98 ms srv</td>
+                                        <td class="num-cell">18.98 ms server</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -242,304 +492,38 @@
             </div>
         </section>
 
-        <!-- ML & NASA PDS VALIDATION SPECS -->
-        <section id="specs" class="section">
+        <!-- 3D ASSET PIPELINE -->
+        <section id="marswalk" class="section band">
             <div class="wrap">
-                <p class="eyebrow">3. Neural Forecasting &amp; PDS Corpus Specifications</p>
-                <h2>Validated against held-out Perseverance MEDA and Curiosity RAD telemetry.</h2>
-                <p class="body">Training records are compiled directly by <code style="font-family:var(--mono);color:var(--orange-soft)">ml/dataset.py</code> from <code style="font-family:var(--mono)">atmos.nmsu.edu</code> (Perseverance MEDA <code style="font-family:var(--mono)">CAL_TIRS</code>, <code style="font-family:var(--mono)">DER_PS</code>, and pre-damage <code style="font-family:var(--mono)">DER_WS ≤ Sol 315</code> across 25 mission sols spanning <code style="font-family:var(--mono)">Sol 1–1321</code>, <code style="font-family:var(--mono)">Ls 1.39°–356.98°</code>) and <code style="font-family:var(--mono)">pds-ppi.igpp.ucla.edu</code> (<code style="font-family:var(--mono)">MSL-M-RAD-3-RDR-V1.0</code>, 1,370 parsed dose rate observations adjusted for CO₂ column pressure shielding). Post-damage wind gaps are filled via a fitted diurnal-seasonal wind harmonic model.</p>
-
-                <div class="spec-summary-grid">
-                    <div class="stat-box">
-                        <div class="k">Aligned Corpus</div>
-                        <div class="v">2,511 Rows</div>
-                        <div class="s">903 PDS bins + 1,608 harmonic grid</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="k">Mean Primary R²</div>
-                        <div class="v">0.9088</div>
-                        <div class="s">503 held-out val / 2,008 train</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="k">Optimizer &amp; Loss</div>
-                        <div class="v">0.05661</div>
-                        <div class="s">Best Val SmoothL1 (β=0.5, AdamW)</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="k">Training Schedule</div>
-                        <div class="v">260 Epochs</div>
-                        <div class="s">Cosine LR (3e-3→1e-5) · 65.45 s</div>
-                    </div>
-                </div>
-
-                <div class="spec-table-wrap">
-                    <table class="spec-table">
-                        <thead>
-                            <tr>
-                                <th>Telemetry Target</th>
-                                <th>MAE</th>
-                                <th>RMSE</th>
-                                <th>R²</th>
-                                <th>Corpus Range (Min / Med / Max)</th>
-                                <th>NASA PDS Instrument &amp; Calibration</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>ground_temp_c</code></td>
-                                <td class="num-cell">2.5033 °C</td>
-                                <td class="num-cell">3.5132 °C</td>
-                                <td class="r2-cell">0.9851</td>
-                                <td class="num-cell">-92.033 / -60.104 / +12.500 °C</td>
-                                <td>MEDA CAL_TIRS surface brightness temperature</td>
-                            </tr>
-                            <tr>
-                                <td><code>air_temp_c</code></td>
-                                <td class="num-cell">1.9959 °C</td>
-                                <td class="num-cell">4.2580 °C</td>
-                                <td class="r2-cell">0.9405</td>
-                                <td class="num-cell">-87.509 / -60.330 / +18.585 °C</td>
-                                <td>MEDA CAL_TIRS ambient air temperature</td>
-                            </tr>
-                            <tr>
-                                <td><code>dust_optical_depth_tau</code></td>
-                                <td class="num-cell">0.0709</td>
-                                <td class="num-cell">0.1059</td>
-                                <td class="r2-cell">0.9332</td>
-                                <td class="num-cell">0.180 / 0.628 / 2.508</td>
-                                <td>TIRS broadband LW emissivity + perihelion dust cycle</td>
-                            </tr>
-                            <tr>
-                                <td><code>radiation_dose_rate_ugy_hr</code></td>
-                                <td class="num-cell">0.1122 µGy/hr</td>
-                                <td class="num-cell">0.2269 µGy/hr</td>
-                                <td class="r2-cell">0.7525</td>
-                                <td class="num-cell">9.651 / 11.499 / 12.984 µGy/hr</td>
-                                <td>Curiosity RAD DOSIMETRY_TOTAL_DOSE_E + DER_PS CO₂ shielding</td>
-                            </tr>
-                            <tr>
-                                <td><code>wind_speed_mps</code></td>
-                                <td class="num-cell">0.2140 m/s</td>
-                                <td class="num-cell">0.3823 m/s</td>
-                                <td class="r2-cell">0.9329</td>
-                                <td class="num-cell">0.300 / 2.657 / 8.970 m/s</td>
-                                <td>MEDA DER_WS (≤ Sol 315) + diurnal-seasonal harmonic fit</td>
-                            </tr>
-                            <tr>
-                                <td><code>wind_bearing_deg</code> (circular)</td>
-                                <td class="num-cell">7.73°</td>
-                                <td class="num-cell">20.90°</td>
-                                <td class="r2-cell">0.9628</td>
-                                <td class="num-cell">0.0° – 360.0° (atan2 sin/cos)</td>
-                                <td>Continuous vector embedding avoiding 0°/360° discontinuity</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- PACKED RGBA INTERMEDIARY LAYERS -->
-        <section id="layers" class="section band">
-            <div class="wrap">
-                <p class="eyebrow">4. Packed 32-Bit RGBA Intermediary Texture (dynamic_hazard_mask.png)</p>
-                <h2>Four physical hazard fields encoded into one 32-bit RGBA buffer.</h2>
-                <p class="body">Each pixel in <code style="font-family:var(--mono);color:var(--orange-soft)">dynamic_hazard_mask.png</code> (configurable <code style="font-family:var(--mono)">64×64</code> to <code style="font-family:var(--mono)">2048×2048</code>) stores four normalized 8-bit scalars <code style="font-family:var(--mono)">[0.0 – 1.0]</code> derived in <code style="font-family:var(--mono)">backend/synthesizer.py</code>. Packing all layers into one PNG lets the 3D shader sample all hazards in a single texture fetch.</p>
-                <div class="cards">
-                    <article class="card">
-                        <div class="thumb thumb-thermal"></div>
-                        <div class="card-body">
-                            <div class="chan" style="--c:#7FDCEC"><b>R</b><span><strong>Channel R · 8-bit [0.0–1.0]</strong>0 warm, 1 cryogenic cold stress</span></div>
-                            <h3 style="color:#7FDCEC">Thermal Cold Stress</h3>
-                            <p>Combines predicted ground temperature with solar hill-shading from DTM gradients (dx, dy), cold-air pooling in low basins (1 − elev_norm), and radiative cooling via Sky-View Factor (SVF).</p>
-                            <pre class="formula-code">cold = clip((15 - Tg)/110, 0.05, 1)
-topo = 0.45*(1-hs) + 0.35*(1-z) + 0.20*svf
-R = clip(cold * (0.35 + 0.65*topo), 0, 1)</pre>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="thumb thumb-dust"></div>
-                        <div class="card-body">
-                            <div class="chan" style="--c:#E8B755"><b>G</b><span><strong>Channel G · 8-bit [0.0–1.0]</strong>0 clear, 1 dense drift &amp; haze</span></div>
-                            <h3 style="color:#E8B755">Dust &amp; Aeolian Drift</h3>
-                            <p>Generates an anisotropic 3-octave wavefield rotated along predicted wind bearing θw, stretched by wind speed (1 + v/8), and concentrated inside low-elevation basins weighted by optical depth τ.</p>
-                            <pre class="formula-code">tau_s = clip((tau - 0.15)/1.45, 0.08, 1)
-basin = 0.55 + 0.45*(1 - elev_norm)
-G = clip(wave(u, v, θw) * basin * tau_s)</pre>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="thumb thumb-radiation"></div>
-                        <div class="card-body">
-                            <div class="chan" style="--c:#FF8A90"><b>B</b><span><strong>Channel B · 8-bit [0.0–1.0]</strong>0 sheltered, 1 peak exposure</span></div>
-                            <h3 style="color:#FF8A90">Ionizing Radiation</h3>
-                            <p>Scales predicted RAD dose rate by topographic exposure and dual-radius (N/32, N/10) horizon occlusion SVF ∈ [0.45, 1.0], capturing shelter behind steep crater walls versus open ridges.</p>
-                            <pre class="formula-code">rad_s = clip((rad - 9.0)/5.0, 0.25, 1)
-exp = 0.60*elev_norm + 0.40*svf
-B = clip((0.15+0.85*exp)*(0.45+0.55*rad_s))</pre>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="thumb thumb-slope"></div>
-                        <div class="card-body">
-                            <div class="chan" style="--c:#EDE6DD"><b>A</b><span><strong>Channel A · 8-bit [0.0–1.0]</strong>0 flat, 1 impassable (≥15°)</span></div>
-                            <h3>Slope Traversability</h3>
-                            <p>Computed directly from HiRISE DTM elevation gradients at 1.01 m/px native spacing. Values hitting 1.0 mark slopes ≥15° (1.21% at 256px, 1.48% at 1024px) where pressurized suits risk tipping.</p>
-                            <pre class="formula-code">dy, dx = np.gradient(elev_m, cell_m)
-slope_deg = deg(arctan(hypot(dx, dy)))
-A = clip(slope_deg / 15.0, 0.0, 1.0)</pre>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- SAMPLE PIXEL EVALUATIONS -->
-        <section id="spots" class="section spots" style="padding-top: 84px;">
-            <div class="wrap">
-                <p class="eyebrow">Observed Western Delta Pixel Samples (1024×1024 HiRISE DTM)</p>
-                <h2>Verified RGBA channel scores across three Jezero landforms.</h2>
-                <p class="body">Direct channel samples extracted from <code style="font-family:var(--mono);color:var(--orange-soft)">JezeroHazardSynthesizer.synthesize_rgba(..., dataset="nasa", size=1024)</code> driven by <code style="font-family:var(--mono)">MarsWeatherPredictor.predict(sol=620, hour=14.0)</code> (Ls = 339.72°, Tg = −11.87°C, τ = 0.459, 11.77 µGy/hr).</p>
-
-                <div class="cards spot-list">
-                    <article class="spot">
-                        <span class="verdict verdict-safe">Low Cost · Traversable</span>
-                        <h3>Alluvial Floor (y=600, x=631)</h3>
-                        <p class="spot-meta">Elev −2,584.2 m · Slope 1.2° · SVF 1.00</p>
-                        <ul class="meters">
-                            <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:16%;background:#5fd4e8"></i></span><span class="m-level">0.16</span></li>
-                            <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:10%;background:#e8b755"></i></span><span class="m-level">0.10</span></li>
-                            <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:47%;background:#ff8a90"></i></span><span class="m-level">0.47</span></li>
-                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:8%;background:#ede6dd"></i></span><span class="m-level">0.08</span></li>
-                        </ul>
-                        <p class="spot-result"><strong>Diurnal Shift:</strong> Safe afternoon traverse (R=0.16). At Sol 620, 04:00 LMST (Tg −82.33°C), cold basin pooling drives R to <strong>0.82</strong>, prompting pre-dawn heater margin checks.</p>
-                    </article>
-
-                    <article class="spot">
-                        <span class="verdict verdict-block">Blocked · A = 1.00</span>
-                        <h3>Delta Scarp Wall (y=327, x=59)</h3>
-                        <p class="spot-meta">Elev −2,505.9 m · Slope 58.4° · SVF 0.52</p>
-                        <ul class="meters">
-                            <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:18%;background:#5fd4e8"></i></span><span class="m-level">0.18</span></li>
-                            <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:4%;background:#e8b755"></i></span><span class="m-level">0.04</span></li>
-                            <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:53%;background:#ff8a90"></i></span><span class="m-level">0.53</span></li>
-                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:100%;background:#fde047"></i></span><span class="m-level is-high">1.00</span></li>
-                        </ul>
-                        <p class="spot-result"><strong>Shader &amp; Graph Cutoff:</strong> Exceeds the 15° spacesuit stability limit (58.4°). Clamped to A = <strong>1.00</strong>, hard-pruned from EVA traversal, and hatched in the shader.</p>
-                    </article>
-
-                    <article class="spot">
-                        <span class="verdict verdict-risk">Elevated Exposure</span>
-                        <h3>Western Rim Crest (y=2, x=34)</h3>
-                        <p class="spot-meta">Elev −2,468.7 m · Slope 6.8° · SVF 0.99</p>
-                        <ul class="meters">
-                            <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:13%;background:#5fd4e8"></i></span><span class="m-level">0.13</span></li>
-                            <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:9%;background:#e8b755"></i></span><span class="m-level">0.09</span></li>
-                            <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:74%;background:#ff8a90"></i></span><span class="m-level is-high">0.74</span></li>
-                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:45%;background:#ede6dd"></i></span><span class="m-level">0.45</span></li>
-                        </ul>
-                        <p class="spot-result"><strong>Sky-View Penalty:</strong> Traversable grade (6.8°), but near-full hemisphere sky openness (SVF 0.99) and elevation push radiation Channel B to <strong>0.74</strong> (max 0.753 on the DTM).</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- TERRAIN RECONSTRUCTION & SYNTHESIZED LAYER OUTPUTS -->
-        <section id="simulator" class="section band">
-            <div class="wrap">
-                <p class="eyebrow">5. Terrain Reconstruction &amp; Synthesized Layer Outputs</p>
-                <h2>Jezero Crater 3D terrain &amp; synthesized RGBA hazard channels.</h2>
-                <p class="body">Visual outputs generated directly from our NASA HiRISE DTM (<code style="font-family:var(--mono);color:var(--orange-soft)">4,135.6 m × 4,135.6 m</code>), <code style="font-family:var(--mono);color:var(--orange-soft)">45 × 45 km</code> regional DEM, and <code style="font-family:var(--mono);color:var(--orange-soft)">JezeroHazardSynthesizer</code> (<code style="font-family:var(--mono)">1024×1024</code>) that feed the external 3D simulator engine.</p>
-
-                <div class="sim" id="sim">
-                    <div class="sim-tabs" role="group" aria-label="Terrain and hazard layer outputs">
-                        <button type="button" class="sim-tab is-active" data-slide="terrain" aria-pressed="true">3D Terrain Landscape</button>
-                        <button type="button" class="sim-tab" data-slide="thermal" aria-pressed="false">R · Thermal Cold</button>
-                        <button type="button" class="sim-tab" data-slide="dust" aria-pressed="false">G · Dust &amp; Drift</button>
-                        <button type="button" class="sim-tab" data-slide="radiation" aria-pressed="false">B · Radiation Flux</button>
-                        <button type="button" class="sim-tab" data-slide="slope" aria-pressed="false">A · Slope ≥15°</button>
-                        <button type="button" class="sim-tab" data-slide="validation" aria-pressed="false">MarsEnvMLP Validation</button>
-                    </div>
-
-                    <div class="sim-stage">
-                        <figure class="slide is-active" data-slide="terrain">
-                            <img src="images/terrain.png" alt="3D surface reconstruction of Jezero Crater Western Delta and 45 km regional DEM">
-                            <div class="slide-empty"><strong>3D Terrain Landscape</strong><span>images/terrain.png not found</span></div>
-                            <figcaption>HiRISE 4.14 km Western Delta 3D reconstruction + 45 km Regional Jezero DEM &amp; mesh pipeline specifications.</figcaption>
-                        </figure>
-
-                        <figure class="slide" data-slide="thermal">
-                            <img src="images/thermal.png" alt="Channel R thermal cold stress hazard overlay at Sol 620 04:00 LMST">
-                            <div class="slide-empty"><strong>Channel R · Thermal Cold</strong><span>images/thermal.png not found</span></div>
-                            <figcaption>Channel R (Sol 620, 04:00 LMST, Tg = −82.33°C): hillshade + cold-basin pooling [0.467 – 0.878].</figcaption>
-                        </figure>
-
-                        <figure class="slide" data-slide="dust">
-                            <img src="images/dust.png" alt="Channel G atmospheric dust optical depth and aeolian drift overlay">
-                            <div class="slide-empty"><strong>Channel G · Dust &amp; Drift</strong><span>images/dust.png not found</span></div>
-                            <figcaption>Channel G (Sol 620, 04:00 LMST, τ = 1.112): wind-rotated wavefield + low-elevation dust settling [0.059 – 0.592].</figcaption>
-                        </figure>
-
-                        <figure class="slide" data-slide="radiation">
-                            <img src="images/radiation.png" alt="Channel B ionizing radiation exposure and Sky-View Factor overlay">
-                            <div class="slide-empty"><strong>Channel B · Radiation Flux</strong><span>images/radiation.png not found</span></div>
-                            <figcaption>Channel B (Sol 620, 14:00 LMST, 11.77 µGy/hr): elevation + dual-radius horizon SVF exposure [0.365 – 0.753].</figcaption>
-                        </figure>
-
-                        <figure class="slide" data-slide="slope">
-                            <img src="images/slope.png" alt="Channel A slope traversability map highlighting 15 degree cutoff">
-                            <div class="slide-empty"><strong>Channel A · Slope ≥15°</strong><span>images/slope.png not found</span></div>
-                            <figcaption>Channel A (HiRISE 1024×1024): spatial gradient slope ≥15° impassable scarps highlighted in yellow (1.48% blocked, max 63.49°).</figcaption>
-                        </figure>
-
-                        <figure class="slide" data-slide="validation">
-                            <img src="images/ml_validation.png" alt="MarsEnvMLP held-out validation curves against NASA PDS MEDA and Curiosity RAD data">
-                            <div class="slide-empty"><strong>MarsEnvMLP Validation</strong><span>images/ml_validation.png not found</span></div>
-                            <figcaption>Held-out validation plots comparing MarsEnvMLP predictions against observed NASA Perseverance MEDA &amp; Curiosity RAD bins (R² = 0.9088).</figcaption>
-                        </figure>
-                    </div>
-                </div>
-
-                <div class="captions">
-                    <p><span>Real DTM Elevation:</span> Displaced directly from NASA HiRISE PDS .IMG rasters and 16-bit 4096×4096 heightmaps.</p>
-                    <p><span>Single-Buffer Encoding:</span> All four channels (R, G, B, A) pack into one PNG buffer for single-fetch shader sampling.</p>
-                    <p><span>Engine-Agnostic Output:</span> Consumed identically by Godot 4 WebGL 2 shaders, Blender/glTF loaders, and route planners.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3D ASSET PIPELINE & ENGINE INTEGRATION -->
-        <section id="marswalk" class="section">
-            <div class="wrap">
-                <p class="eyebrow">6. 3D Terrain Asset Pipeline &amp; Engine Contract</p>
-                <h2>Built for WebGL 2 shader splatmapping and lossless tile streaming.</h2>
+                <p class="eyebrow">3D terrain and engine assets</p>
+                <h2>How we prepare the terrain for the 3D engine.</h2>
                 <div class="cards three">
                     <article class="tile">
-                        <p class="big">4096²</p>
-                        <h3>16-Bit Heightmaps &amp; 9×9 Ortho Tiles</h3>
-                        <p><code style="font-family:var(--mono);color:var(--orange-soft)">process_hirise.py</code> and <code style="font-family:var(--mono);color:var(--orange-soft)">slice_ortho_chunks.py</code> convert raw HiRISE .IMG DTMs and .JP2 orthoimagery into 16-bit grayscale heightmaps plus 81 lossless RGB PNG chunks (<code style="font-family:var(--mono)">chunk_01..81</code>) with exact UV, kilometer, and scene-meter manifest bounds.</p>
+                        <p class="big">4096 px</p>
+                        <h3>16-bit heightmaps and 9×9 tiles</h3>
+                        <p>We convert raw NASA HiRISE elevation files (.IMG) and satellite photos (.JP2) into 16-bit grayscale heightmaps plus 81 lossless image tiles with exact UV and kilometer bounds so the 3D scene loads sharply without running out of memory.</p>
                     </article>
                     <article class="tile">
                         <p class="big">.GLB / .OBJ</p>
-                        <h3>Displaced Landscape Mesh Exporter</h3>
-                        <p><code style="font-family:var(--mono);color:var(--orange-soft)">export_terrain_mesh.py</code> compiles binary glTF 2.0 (<code style="font-family:var(--mono)">.glb</code>) and Wavefront (<code style="font-family:var(--mono)">.obj</code> + <code style="font-family:var(--mono)">.mtl</code>) terrain meshes with area-weighted smooth vertex normals for both the 4.14 km HiRISE Western Delta and 45 km regional Jezero Crater landscapes.</p>
+                        <h3>Ready-to-load 3D meshes</h3>
+                        <p>Our mesh exporter builds binary glTF (.glb) and Wavefront (.obj) terrain meshes with smooth vertex normals for both the 4.1 km western delta (164 m relief) and the full 45 km Jezero Crater (320 m relief).</p>
                     </article>
                     <article class="tile">
                         <p class="big">WebGL 2</p>
-                        <h3>Godot 4 Compatibility &amp; COOP/COEP</h3>
-                        <p>Specified for Godot 4 Compatibility renderer (OpenGL ES 3.0 / WebGL 2.0) with <code style="font-family:var(--mono);color:var(--orange-soft)">Cross-Origin-Opener-Policy: same-origin</code> and <code style="font-family:var(--mono)">Cross-Origin-Embedder-Policy: require-corp</code> headers. <code style="font-family:var(--mono)">ares_terrain.gdshader</code> unpacks RGBA channels and maps τ to volumetric fog.</p>
+                        <h3>Built for Godot 4 in the browser</h3>
+                        <p>Designed for Godot 4's Compatibility renderer with COOP and COEP isolation headers. A custom shader (ares_terrain.gdshader) unpacks the RGBA mask on the GPU to tint hazards and scale volumetric dust fog.</p>
                     </article>
                 </div>
             </div>
         </section>
 
         <!-- FINAL CTA -->
-        <section class="section band cta">
+        <section class="section cta">
             <div class="wrap">
-                <h2>Explore the Jezero Crater terrain &amp; hazard synthesis specs above.</h2>
+                <h2>See the Jezero Crater terrain and hazard layers in action.</h2>
                 <div class="cta-row center">
-                    <a href="#simulator" class="btn btn-main">Inspect Terrain &amp; Layers</a>
-                    <a href="#top" class="btn btn-line">Back to Top</a>
+                    <a href="#simulator" class="btn btn-main">Explore the hazard maps</a>
+                    <a href="#top" class="btn btn-line">Back to top</a>
                 </div>
             </div>
         </section>
@@ -550,8 +534,8 @@ A = clip(slope_deg / 15.0, 0.0, 1.0)</pre>
         <div class="wrap foot-inner">
             <img src="logo-b.jpg" alt="Sol Searchers" class="foot-logo">
             <div class="foot-text">
-                <p class="foot-title">ARES-MAP · Sol Searchers</p>
-                <p>Autonomous Reconnaissance &amp; EVA Surface Mapping — built for the NASA Space Apps Challenge ("Interplanetary Survival Guide: Martian Map"). Powered by PyTorch MarsEnvMLP, NASA PDS MEDA &amp; RAD archives, HiRISE DTMs, and FastAPI.</p>
+                <p class="foot-title">ARES-MAP</p>
+                <p>Built by Sol Searchers for the 2026 NASA Space Apps Challenge, "Interplanetary Survival Guide: Martian Map".</p>
             </div>
         </div>
     </footer>
