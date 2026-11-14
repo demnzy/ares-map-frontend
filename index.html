@@ -63,11 +63,10 @@
         <!-- DATA SOURCES STRIP -->
         <section class="strip">
             <div class="wrap strip-inner">
-                <p class="eyebrow">Built with NASA data</p>
-                <p>Perseverance MEDA weather station</p>
-                <p>Curiosity RAD radiation detector</p>
-                <p>HiRISE 3D terrain heightmaps (1 m/px)</p>
-                <p>PyTorch forecast model + FastAPI backend</p>
+                <p class="eyebrow">Built on 5 NASA data layers</p>
+                <p>MRO HiRISE 1 m/px 3D topography &amp; optical imagery</p>
+                <p>Perseverance MEDA thermal, pressure &amp; wind logs</p>
+                <p>Curiosity RAD surface radiation dosimetry</p>
             </div>
         </section>
 
@@ -75,10 +74,10 @@
         <section id="problem" class="section">
             <div class="wrap split">
                 <div class="split-text">
-                    <p class="eyebrow">The problem</p>
-                    <h2>Existing Mars maps are flat and static. Conditions on the ground change every hour.</h2>
-                    <p class="body">Tools like JPL Mars Trek are great for viewing Mars from orbit, but they are flat 2D maps. An astronaut planning a four-hour walk needs to know what conditions will look like on the ground at a specific spot and hour.</p>
-                    <p class="body">We focused on Jezero Crater's western delta because it gives us the best overlap of real surface weather from Perseverance and 1-meter 3D elevation maps from the Mars Reconnaissance Orbiter.</p>
+                    <p class="eyebrow">The problem &amp; science mission</p>
+                    <h2>Global Mars maps show the whole planet. Astronauts need a map for the next four hours on foot.</h2>
+                    <p class="body">As Artemis II showed during its lunar flyby, human explorers observe and connect clues in the field in ways rovers cannot. Future astronauts walking across Jezero Crater's western delta (18.38°N, 77.58°E) to sample ancient river mudstones and crater-rim carbonates will need the same real-time awareness on the ground.</p>
+                    <p class="body">Existing NASA tools like JPL Mars Trek (which offers both 2D and 3D views) and the USGS-NASA Planetary Geologic Mapping Program are built for regional and global planning. They do not layer hourly weather forecasts, wind-blown dust, cosmic radiation, and 15° spacesuit slope limits onto the hyperlocalized 4.1 × 4.1 km walking zone an astronaut explores on a single Marswalk.</p>
                 </div>
                 <div class="stack">
                     <div class="fact">
@@ -194,6 +193,7 @@
                     <article class="spot">
                         <span class="verdict verdict-safe">Safe to walk</span>
                         <h3>Sunlit crater floor</h3>
+                        <p class="spot-desc">Science goal: Habitat staging &amp; basalt core sampling.</p>
                         <p class="spot-meta">Elevation −2,584 m · Slope 1.2° · Open sky 100%</p>
                         <ul class="meters">
                             <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:16%;background:#5fd4e8"></i></span><span class="m-level">0.16</span></li>
@@ -201,12 +201,13 @@
                             <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:47%;background:#ff8a90"></i></span><span class="m-level">0.47</span></li>
                             <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:8%;background:#ede6dd"></i></span><span class="m-level">0.08</span></li>
                         </ul>
-                        <p class="spot-result"><strong>Route planner:</strong> easy afternoon walk. Before dawn at 04:00 (−82.3°C), cold air settling in this basin pushes Thermal up to <strong>0.82</strong>.</p>
+                        <p class="spot-result"><strong>Route planner:</strong> safe afternoon traverse for coring. Before dawn at 04:00 (−82.3°C), cold air pooling in this basin pushes Thermal up to <strong>0.82</strong>.</p>
                     </article>
 
                     <article class="spot">
                         <span class="verdict verdict-block">Blocked (A = 1.00)</span>
                         <h3>Steep delta cliff</h3>
+                        <p class="spot-desc">Science goal: Ancient river-delta mudstone layer inspection.</p>
                         <p class="spot-meta">Elevation −2,506 m · Slope 58.4° · Open sky 52%</p>
                         <ul class="meters">
                             <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:18%;background:#5fd4e8"></i></span><span class="m-level">0.18</span></li>
@@ -214,12 +215,13 @@
                             <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:53%;background:#ff8a90"></i></span><span class="m-level">0.53</span></li>
                             <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:100%;background:#fde047"></i></span><span class="m-level is-high">1.00</span></li>
                         </ul>
-                        <p class="spot-result"><strong>Route planner:</strong> impassable. Anything 15° or steeper clamps Slope to <strong>1.00</strong>, blocks routes across it, and adds warning stripes.</p>
+                        <p class="spot-result"><strong>Route planner:</strong> impassable on foot. Anything 15° or steeper clamps Slope to <strong>1.00</strong> so A* pathfinding routes crew safely around cliff obstacles.</p>
                     </article>
 
                     <article class="spot">
                         <span class="verdict verdict-risk">High radiation</span>
                         <h3>Exposed rim crest</h3>
+                        <p class="spot-desc">Science goal: Western crater rim carbonate outcrop sampling.</p>
                         <p class="spot-meta">Elevation −2,469 m · Slope 6.8° · Open sky 99%</p>
                         <ul class="meters">
                             <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:13%;background:#5fd4e8"></i></span><span class="m-level">0.13</span></li>
@@ -227,7 +229,7 @@
                             <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:74%;background:#ff8a90"></i></span><span class="m-level is-high">0.74</span></li>
                             <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:45%;background:#ede6dd"></i></span><span class="m-level">0.45</span></li>
                         </ul>
-                        <p class="spot-result"><strong>Route planner:</strong> walkable slope, but high elevation and 99% sky exposure push Radiation near the map maximum (<strong>0.75</strong>), so routes try to skirt around it.</p>
+                        <p class="spot-result"><strong>Route planner:</strong> walkable slope, but high elevation and 99% sky exposure push Radiation near the map maximum (<strong>0.75</strong>), limiting crew dwell time on the ridge.</p>
                     </article>
                 </div>
             </div>
@@ -254,7 +256,7 @@
                         <figure class="slide is-active" data-slide="terrain">
                             <img src="images/terrain.png" alt="3D terrain view of Jezero Crater western delta and full 45 km crater">
                             <div class="slide-empty"><strong>3D Terrain</strong><span>images/terrain.png not found</span></div>
-                            <figcaption>3D terrain built from NASA HiRISE 1 m/px delta data (4.1 × 4.1 km) and regional 45 × 45 km crater elevation.</figcaption>
+                            <figcaption>3D terrain built from NASA HiRISE 1 m/px delta data (DTEEC_045994_1985 / ESP_046060_1985, 4.14 × 4.14 km) alongside our 45 × 45 km procedural crater model.</figcaption>
                         </figure>
 
                         <figure class="slide" data-slide="thermal">
@@ -489,29 +491,68 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="ref-block" id="references">
+                    <p class="eyebrow">NASA Missions &amp; Open Tools</p>
+                    <h3 class="ref-block-title">What we used: datasets, product IDs, and mapping context.</h3>
+                    <div class="ref-grid">
+                        <article class="ref-card">
+                            <span class="ref-badge">Optical &amp; Topographic</span>
+                            <h3>MRO HiRISE Delta</h3>
+                            <p>1 m/px stereo digital terrain model and red-band orbital orthophoto covering 4,135.6 × 4,135.6 m of Jezero Crater's western delta (−2,626.1 m to −2,462.1 m), paired with a 45 × 45 km procedural crater context map.</p>
+                            <div class="ref-id">DTEEC_045994_1985_046060_1985_U01.IMG<br>ESP_046060_1985_RED_C_01_ORTHO.JP2</div>
+                            <a class="ref-link" href="https://www.uahirise.org/dtm/dtm.php?ID=ESP_045994_1985" target="_blank" rel="noopener">HiRISE DTM Archive &rarr;</a>
+                        </article>
+
+                        <article class="ref-card">
+                            <span class="ref-badge">Thermal &amp; Atmosphere</span>
+                            <h3>Perseverance MEDA</h3>
+                            <p>25 sols of calibrated ground and air temperatures, longwave/shortwave irradiance (CAL_TIRS), pressure (DER_PS), and wind sensors (DER_WS through Sol 315) across Sol 1 to Sol 1321 in Jezero Crater.</p>
+                            <div class="ref-id">NASA PDS4: mars2020_meda<br>(CAL_TIRS, DER_PS, DER_WS)</div>
+                            <a class="ref-link" href="https://atmos.nmsu.edu/PDS/data/PDS4/Mars2020/mars2020_meda" target="_blank" rel="noopener">PDS Atmospheres Node &rarr;</a>
+                        </article>
+
+                        <article class="ref-card">
+                            <span class="ref-badge">Surface Radiation</span>
+                            <h3>Curiosity RAD</h3>
+                            <p>1,370 parsed DOSIMETRY_TOTAL_DOSE_E cosmic radiation dose records (9.65 to 12.98 µGy/hr) across Sol 584 to Sol 3778, aligned by Mars hour and adjusted for Jezero barometric shielding.</p>
+                            <div class="ref-id">NASA PDS3: MSL-M-RAD-3-RDR-V1.0<br>DOSIMETRY_TOTAL_DOSE_E</div>
+                            <a class="ref-link" href="https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/DATA" target="_blank" rel="noopener">PDS PPI RAD Archive &rarr;</a>
+                        </article>
+
+                        <article class="ref-card">
+                            <span class="ref-badge">Context &amp; Software</span>
+                            <h3>Tools &amp; 3D Engine</h3>
+                            <p>Scoped alongside <a href="https://www.usgs.gov/centers/astrogeology-science-center" target="_blank" rel="noopener" style="color:var(--sand);text-decoration:underline;">USGS-NASA Planetary Geologic Mapping</a> and JPL Mars Trek regional views; built with PyTorch (MarsEnvMLP), FastAPI, Rasterio, NumPy, and WebGL.</p>
+                            <div class="ref-id">Python · PyTorch · FastAPI<br>Rasterio · Three.js · Godot 4 WebGL 2</div>
+                            <a class="ref-link" href="https://trek.nasa.gov/mars/" target="_blank" rel="noopener">JPL Mars Trek &rarr;</a>
+                        </article>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- 3D ASSET PIPELINE -->
+        <!-- MARSWALK & 3D ASSET PIPELINE -->
         <section id="marswalk" class="section band">
             <div class="wrap">
-                <p class="eyebrow">3D terrain and engine assets</p>
-                <h2>How we prepare the terrain for the 3D engine.</h2>
+                <p class="eyebrow">Built for the Marswalk &amp; 3D Engine</p>
+                <h2>Designed for astronauts on foot, spacesuit limits, and live 3D rendering.</h2>
+                <p class="body">ARES-MAP works as a pre-EVA habitat briefing display, a carried crew field tablet, or a compact visor HUD overlay. Because pressurized suits restrict bending and can tip on steep rubble, the 3D scene layers live weather onto high-resolution terrain meshes so A* pathfinding routes two-person buddy teams between science stations while avoiding cliffs 15° or steeper and hazard pockets.</p>
                 <div class="cards three">
                     <article class="tile">
                         <p class="big">4096 px</p>
-                        <h3>16-bit heightmaps and 9×9 tiles</h3>
-                        <p>We convert raw NASA HiRISE elevation files (.IMG) and satellite photos (.JP2) into 16-bit grayscale heightmaps plus 81 lossless image tiles with exact UV and kilometer bounds so the 3D scene loads sharply without running out of memory.</p>
+                        <h3>16-bit heightmaps &amp; 9×9 tiles</h3>
+                        <p>Converts HiRISE DTEEC_045994_1985 elevation (.IMG) and ESP_046060_1985 satellite imagery (.JP2) into 16-bit heightmaps plus 81 lossless ortho tiles so interactive habitat briefings and field tablets stream sharp terrain cleanly.</p>
                     </article>
                     <article class="tile">
                         <p class="big">.GLB / .OBJ</p>
-                        <h3>Ready-to-load 3D meshes</h3>
-                        <p>Our mesh exporter builds binary glTF (.glb) and Wavefront (.obj) terrain meshes with smooth vertex normals for both the 4.1 km western delta (164 m relief) and the full 45 km Jezero Crater (320 m relief).</p>
+                        <h3>3D delta &amp; crater meshes</h3>
+                        <p>Exports binary glTF (.glb) and Wavefront (.obj) meshes with vertex normals for the 4.14 km NASA western delta (164 m relief) alongside our 45 km procedural full Jezero Crater model (320 m relief).</p>
                     </article>
                     <article class="tile">
                         <p class="big">WebGL 2</p>
-                        <h3>Built for Godot 4 in the browser</h3>
-                        <p>Designed for Godot 4's Compatibility renderer with COOP and COEP isolation headers. A custom shader (ares_terrain.gdshader) unpacks the RGBA mask on the GPU to tint hazards and scale volumetric dust fog.</p>
+                        <h3>Real-time shader &amp; route planning</h3>
+                        <p>Drives our interactive Three.js 3D route explorer and Godot 4 Compatibility (COOP/COEP) client shaders (ares_terrain.gdshader), unpacking the RGBA mask in real time to flag 15° suit limits, cold basins, radiation ridges, and dust haze.</p>
                     </article>
                 </div>
             </div>

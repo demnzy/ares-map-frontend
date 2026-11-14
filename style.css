@@ -932,6 +932,92 @@ button:focus-visible {
     color: var(--orange-soft);
 }
 
+.ref-block {
+    margin-top: 48px;
+}
+
+.ref-block-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.ref-grid {
+    margin-top: 22px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 18px;
+    align-items: stretch;
+}
+
+.ref-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(50, 62, 74, 0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.ref-badge {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--orange-soft);
+    background: rgba(228, 100, 53, 0.12);
+    border: 1px solid rgba(228, 100, 53, 0.35);
+    border-radius: 5px;
+    padding: 3px 8px;
+}
+
+.ref-card h3 {
+    margin-top: 12px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--sand);
+}
+
+.ref-card p {
+    margin-top: 8px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--muted);
+}
+
+.ref-id {
+    margin-top: 12px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: var(--bg-darker);
+    border: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #d9e2ec;
+    word-break: break-word;
+}
+
+.ref-link {
+    margin-top: auto;
+    padding-top: 14px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--orange-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ref-link:hover {
+    color: var(--sand);
+}
+
 .m-level {
     font-family: var(--mono);
     font-size: 13px;
