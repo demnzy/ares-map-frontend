@@ -248,13 +248,38 @@
             </div>
         </section>
 
+
         <!-- TERRAIN & LAYER OUTPUTS -->
         <section id="simulator" class="section band">
             <div class="wrap">
-                <p class="eyebrow">Terrain and hazard map outputs</p>
-                <h2>What our pipeline generates for the 3D simulator.</h2>
-                <p class="body">Our team is building the main interactive 3D simulator separately. Click through the tabs below to inspect the Jezero Crater terrain meshes, each of the three synthesized RGB hazard channels, and our weather model's test results against NASA data.</p>
+                <p class="eyebrow">Interactive 3D Simulator &amp; Hazard Outputs</p>
+                <h2>Explore Jezero Crater directly in your browser.</h2>
+                <p class="body">Test our interactive Godot 4 simulator live below, or click through the tabs underneath to inspect the underlying Jezero Crater terrain meshes, synthesized RGB hazard channels, and NASA weather model validation.</p>
 
+                <!-- LIVE GODOT SIMULATOR FRAME -->
+                <div class="godot-wrapper" id="godot-wrapper">
+                    <div class="godot-toolbar">
+                        <span class="godot-status">Godot 4 3D Simulation • Jezero Crater</span>
+                        <button type="button" id="godot-fullscreen-btn" class="godot-fs-btn">
+                            Fullscreen
+                        </button>
+                    </div>
+                    <div class="godot-frame-box" id="godot-frame-box">
+                        <!-- Iframe will be injected here via JS if on desktop -->
+                    </div>
+                    <div class="godot-controls">
+                        <span class="control-item"><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> Movement</span>
+                        <span class="control-divider">•</span>
+                        <span class="control-item"><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> Camera Rotation</span>
+                    </div>
+                </div>
+
+                <!-- Mobile fallback notice -->
+                <div class="mobile-notice" id="mobile-notice" style="display: none;">
+                    <p>💻 <strong>Note:</strong> The interactive 3D Godot simulator requires a desktop or laptop computer with keyboard and mouse controls. Please visit on a computer to test it live!</p>
+                </div>
+
+                <!-- EXISTING DATA & LAYER TABS -->
                 <div class="sim" id="sim">
                     <div class="sim-tabs" role="group" aria-label="Terrain and hazard layer outputs">
                         <button type="button" class="sim-tab is-active" data-slide="terrain" aria-pressed="true">3D Terrain</button>
@@ -289,7 +314,6 @@
                             <figcaption>Blue channel (Sol 620, 14:00, 11.8 µGy/hr): higher cosmic dose on exposed ridges, lower behind crater walls.</figcaption>
                         </figure>
 
-
                         <figure class="slide" data-slide="validation">
                             <img src="images/ml_validation.png" alt="PyTorch MarsEnvMLP validation plots compared to NASA Perseverance and Curiosity measurements">
                             <div class="slide-empty"><strong>Model Validation</strong><span>images/ml_validation.png not found</span></div>
@@ -301,7 +325,7 @@
                 <div class="captions">
                     <p><span>Real NASA elevation:</span> Built from HiRISE PDS .IMG elevation files and 4096×4096 16-bit heightmaps.</p>
                     <p><span>Single RGB payload:</span> One PNG file carries all three environmental hazard scores for fast GPU shader sampling.</p>
-                    <p><span>Engine ready:</span> Exported to feed the Godot 4 WebGL 2 simulator and route planner.</p>
+                    <p><span>Engine ready:</span> Exported directly into the live Godot 4 WebGL 2 simulator and route planner above.</p>
                 </div>
             </div>
         </section>
@@ -614,5 +638,71 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+    const godotWrapper = document.getElementById('godot-wrapper');
+    const fsBtn = document.getElementById('godot-fullscreen-btn');
+    const godotIframe = document.getElementById('godot-iframe');
+
+    fsBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            godotWrapper.requestFullscreen().then(() => {
+                // Return keyboard/mouse focus directly to the Godot canvas
+                godotIframe.focus();
+            }).catch(err => {
+                console.error(`Fullscreen error: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    });
+
+    // Automatically updates button text when Esc is pressed or fullscreen changes
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement === godotWrapper) {
+            fsBtn.textContent = 'Exit Fullscreen (Esc)';
+        } else {
+            fsBtn.textContent = 'Fullscreen';
+        }
+    });
+    
+    const wrapper = document.getElementById('godot-wrapper');
+    const frameBox = document.getElementById('godot-frame-box');
+    const mobileNotice = document.getElementById('mobile-notice');
+    // 1. Check if browser explicitly flags it as a mobile device
+const isMobileUA = navigator.userAgentData ? navigator.userAgentData.mobile : /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+// 2. Check if the primary input is a mouse/trackpad (precision pointer)
+const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+// 3. Check for desktop platforms (Windows, macOS, Linux, ChromeOS)
+let isDesktopOS = true;
+if (navigator.userAgentData && navigator.userAgentData.platform) {
+    const platform = navigator.userAgentData.platform.toLowerCase();
+    // Exclude mobile OS strings if present
+    if (platform.includes('android') || platform.includes('ios') || platform.includes('ipad')) {
+        isDesktopOS = false;
+    }
+}
+
+// True desktop = Not explicitly mobile UA AND has a mouse/trackpad AND is on a desktop OS
+const isActualDesktop = !isMobileUA && hasFinePointer && isDesktopOS;
+
+if (!isActualDesktop) {
+    // Hide simulator and show mobile/tablet notice
+    wrapper.style.display = 'none';
+    if (mobileNotice) mobileNotice.style.display = 'block';
+} else {
+    // Desktop: Safe to inject and boot the Godot iframe
+    frameBox.innerHTML = `
+        <iframe 
+            id="godot-iframe"
+            src="game/index.html" 
+            title="Jezero Crater 3D Simulator" 
+            allow="autoplay; fullscreen; pointer-lock"
+            loading="eager">
+        </iframe>
+    `;
+}
+</script>
 </body>
 </html>
