@@ -161,7 +161,7 @@
             <div class="wrap">
                 <p class="eyebrow">Hazard layers</p>
                 <h2>Three hazards packed into one RGB image.</h2>
-                <p class="body">Instead of sending separate files to the 3D engine, the backend packs all three environmental hazard layers into one PNG image (dynamic_hazard_mask.png). Every pixel stores a score from 0 (safe) to 1 (high risk) in its red, green, and blue channels.</p>
+                <p class="body">Instead of sending separate files to the 3D engine, the backend packs all three environmental hazard layers into one PNG image (dynamic_hazard_mask.png). Every pixel stores a score from 0 (safe) to 1 (high risk) in its red, green, and blue data channels—the 3D simulator displays them as Red (Thermal), Green (Dust), and Purple (Radiation).</p>
                 <div class="cards">
                     <article class="card" data-tint="0">
                         <div class="thumb thumb-thermal"></div>
