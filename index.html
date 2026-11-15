@@ -169,7 +169,7 @@
                             <div class="chan" style="--c:#7FDCEC"><b>R</b><span><strong>Red channel</strong>0 warm, 1 freezing</span></div>
                             <h3 style="color:#7FDCEC">Thermal</h3>
                             <p>Highlights dangerously cold spots, such as shadowed crater walls and low basins where cold air settles overnight.</p>
-                            <p class="layer-inputs"><strong>Inputs:</strong> ground temperature forecast, sun angle shadows, elevation, and night cooling.</p>
+                            <p class="layer-inputs"><strong>Inputs:</strong> ground temperature forecast, sun-angle hillshade, elevation, and sky-view factor.</p>
                         </div>
                     </article>
                     <article class="card" data-tint="1">
@@ -178,7 +178,7 @@
                             <div class="chan" style="--c:#E8B755"><b>G</b><span><strong>Green channel</strong>0 clear, 1 heavy dust</span></div>
                             <h3 style="color:#E8B755">Dust</h3>
                             <p>Shows where blowing dust builds up and cuts visibility along the predicted wind direction.</p>
-                            <p class="layer-inputs"><strong>Inputs:</strong> dust optical depth (τ), wind speed, wind bearing, and low-ground settling.</p>
+                            <p class="layer-inputs"><strong>Inputs:</strong> dust optical depth (τ), wind speed, wind direction, and low-ground elevation.</p>
                         </div>
                     </article>
                     <article class="card" data-tint="2">
@@ -187,7 +187,7 @@
                             <div class="chan" style="--c:#FF8A90"><b>B</b><span><strong>Blue channel</strong>0 sheltered, 1 exposed</span></div>
                             <h3 style="color:#FF8A90">Radiation</h3>
                             <p>Maps cosmic ray exposure, which stays higher on open ridges and drops inside sheltered crater walls.</p>
-                            <p class="layer-inputs"><strong>Inputs:</strong> radiation dose forecast, ground elevation, and open-sky view factor.</p>
+                            <p class="layer-inputs"><strong>Inputs:</strong> radiation dose forecast, ground elevation, and sky-view factor.</p>
                         </div>
                     </article>
                 </div>
@@ -511,11 +511,6 @@
                         <p class="big">4096 px</p>
                         <h3>16-bit heightmaps &amp; 9×9 tiles</h3>
                         <p>Converts HiRISE DTEEC_045994_1985 elevation (.IMG) and ESP_046060_1985 satellite imagery (.JP2) into 16-bit heightmaps plus 81 lossless ortho tiles so interactive habitat briefings and field tablets stream sharp terrain cleanly.</p>
-                    </article>
-                    <article class="tile">
-                        <p class="big">.GLB / .OBJ</p>
-                        <h3>3D delta &amp; crater meshes</h3>
-                        <p>Exports binary glTF (.glb) and Wavefront (.obj) meshes with vertex normals for the 4.14 km NASA western delta (164 m relief) alongside our 45 km procedural full Jezero Crater model (320 m relief).</p>
                     </article>
                     <article class="tile">
                         <p class="big">WebGL 2</p>
