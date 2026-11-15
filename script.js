@@ -326,24 +326,6 @@
     }
     texData = makeProcedural();
 
-    // If you add images/mars.jpg it replaces the drawn Mars.
-    // (Needs Live Server or a real host. Opening the file directly blocks reading the image.)
-    {
-        const img = new Image();
-        img.onload = () => {
-            try {
-                const c = document.createElement('canvas');
-                c.width = TW; c.height = TH;
-                const x = c.getContext('2d');
-                x.drawImage(img, 0, 0, TW, TH);
-                texData = x.getImageData(0, 0, TW, TH).data;
-            } catch (err) {
-                console.info('mars.jpg could not be read. Open the site with Live Server to use it. Using the drawn Mars for now.');
-            }
-        };
-        img.src = 'images/mars.jpg';
-    }
-
     function renderGlobe() {
         const td = texData;
         const inv = 1 / (Math.PI * 2);

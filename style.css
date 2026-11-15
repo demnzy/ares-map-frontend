@@ -2184,6 +2184,59 @@ button:focus-visible {
   filter: brightness(1.08);
 }
 
+.godot-hazard-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem 1.1rem;
+  padding: 0.65rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.82rem;
+  color: rgba(243, 237, 230, 0.82);
+}
+
+.godot-hazard-legend .legend-title {
+  font-weight: 600;
+  color: #f3ede6;
+}
+
+.hazard-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hazard-swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  display: inline-block;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.swatch-thermal {
+  background: linear-gradient(90deg, rgba(127, 220, 236, 0.25), #29b6f6);
+}
+
+.swatch-dust {
+  background: linear-gradient(90deg, rgba(232, 183, 85, 0.25), #f5a623);
+}
+
+.swatch-radiation {
+  background: linear-gradient(90deg, rgba(255, 138, 144, 0.25), #ff3b3b);
+}
+
+.hazard-scale {
+  color: rgba(243, 237, 230, 0.68);
+}
+
+.hazard-scale em {
+  font-style: normal;
+  color: rgba(243, 237, 230, 0.9);
+}
+
 .godot-frame-box iframe {
   position: absolute;
   inset: 0;

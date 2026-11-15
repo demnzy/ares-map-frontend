@@ -277,6 +277,13 @@
                         <span class="control-divider">•</span>
                         <span class="control-item"><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> Camera Rotation</span>
                     </div>
+                    <div class="godot-hazard-legend" aria-label="3D Simulator Hazard Color Legend">
+                        <span class="legend-title">Overlay Danger Colors:</span>
+                        <span class="hazard-chip"><span class="hazard-swatch swatch-thermal"></span><strong>Thermal (Cold)</strong> — Blue/Cyan</span>
+                        <span class="hazard-chip"><span class="hazard-swatch swatch-dust"></span><strong>Dust</strong> — Amber/Yellow</span>
+                        <span class="hazard-chip"><span class="hazard-swatch swatch-radiation"></span><strong>Radiation</strong> — Red</span>
+                        <span class="hazard-scale">Opacity = Danger: <em>Clear (Safe)</em> → <em>Faint (Caution)</em> → <em>Solid (High Danger)</em></span>
+                    </div>
                 </div>
 
                 <!-- Mobile fallback notice -->
@@ -659,7 +666,7 @@
                 id="godot-iframe"
                 src="game/index.html"
                 title="Jezero Crater 3D Simulator"
-                allow="autoplay; fullscreen; pointer-lock"
+                allow="autoplay; fullscreen"
                 loading="eager">
             </iframe>
         `;
@@ -732,21 +739,6 @@
     } else {
         const launchBtn = document.getElementById('godot-launch-btn');
         if (launchBtn) launchBtn.addEventListener('click', mountGodotSimulator);
-
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                if (document.getElementById('godot-iframe')) return;
-                Promise.all([
-                    fetch('game/index.wasm', { cache: 'force-cache', priority: 'low' }).then((r) => r.ok ? r.arrayBuffer() : null),
-                    fetch('game/index.pck', { cache: 'force-cache', priority: 'low' }).then((r) => r.ok ? r.arrayBuffer() : null),
-                ]).then((results) => {
-                    const readyBtn = document.getElementById('godot-launch-btn');
-                    if (results[0] && results[1] && readyBtn && !document.getElementById('godot-iframe')) {
-                        readyBtn.textContent = 'Launch 3D Simulator (Ready)';
-                    }
-                }).catch(() => {});
-            }, 1200);
-        });
     }
 </script>
 </body>
