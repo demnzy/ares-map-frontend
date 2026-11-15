@@ -26,10 +26,6 @@
         <i id="routeDot"></i>
     </div>
 
-    <!-- Custom cursor -->
-    <div class="c-ring" id="cRing" aria-hidden="true"><b></b><b></b><b></b><b></b></div>
-    <div class="c-dot" id="cDot" aria-hidden="true"></div>
-
     <!-- NAV -->
     <header class="nav" id="nav">
         <div class="nav-inner">
@@ -260,12 +256,21 @@
                 <div class="godot-wrapper" id="godot-wrapper">
                     <div class="godot-toolbar">
                         <span class="godot-status">Godot 4 3D Simulation • Jezero Crater</span>
-                        <button type="button" id="godot-fullscreen-btn" class="godot-fs-btn">
-                            Fullscreen
-                        </button>
+                        <div class="godot-toolbar-actions">
+                            <button type="button" id="godot-unload-btn" class="godot-fs-btn" style="display: none;">
+                                Unload
+                            </button>
+                            <button type="button" id="godot-fullscreen-btn" class="godot-fs-btn">
+                                Fullscreen
+                            </button>
+                        </div>
                     </div>
                     <div class="godot-frame-box" id="godot-frame-box">
-                        <!-- Iframe will be injected here via JS if on desktop -->
+                        <div class="godot-launch-cover" id="godot-launch-cover">
+                            <h3>Jezero Crater 3D WebGL Simulator</h3>
+                            <p>Loads on demand (~83 MB WebAssembly + terrain pack) so page scrolling stays fast.</p>
+                            <button type="button" id="godot-launch-btn" class="godot-launch-btn">Launch 3D Simulator</button>
+                        </div>
                     </div>
                     <div class="godot-controls">
                         <span class="control-item"><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> Movement</span>
@@ -641,13 +646,47 @@
     <script>
     const godotWrapper = document.getElementById('godot-wrapper');
     const fsBtn = document.getElementById('godot-fullscreen-btn');
-    const godotIframe = document.getElementById('godot-iframe');
+    const unloadBtn = document.getElementById('godot-unload-btn');
+    const frameBox = document.getElementById('godot-frame-box');
+    const mobileNotice = document.getElementById('mobile-notice');
+    const launchCoverHtml = frameBox.innerHTML;
+
+    function mountGodotSimulator() {
+        if (document.getElementById('godot-iframe')) return;
+        if (window.setAresCanvasesPaused) window.setAresCanvasesPaused(true);
+        frameBox.innerHTML = `
+            <iframe
+                id="godot-iframe"
+                src="game/index.html"
+                title="Jezero Crater 3D Simulator"
+                allow="autoplay; fullscreen; pointer-lock"
+                loading="eager">
+            </iframe>
+        `;
+        if (unloadBtn) unloadBtn.style.display = 'inline-block';
+    }
+
+    function unmountGodotSimulator() {
+        if (!document.getElementById('godot-iframe')) return;
+        if (document.fullscreenElement === godotWrapper) {
+            document.exitFullscreen().catch(() => {});
+        }
+        frameBox.innerHTML = launchCoverHtml;
+        if (unloadBtn) unloadBtn.style.display = 'none';
+        if (window.setAresCanvasesPaused) window.setAresCanvasesPaused(false);
+        const launchBtn = document.getElementById('godot-launch-btn');
+        if (launchBtn) launchBtn.addEventListener('click', mountGodotSimulator);
+    }
 
     fsBtn.addEventListener('click', () => {
+        if (!document.getElementById('godot-iframe')) {
+            mountGodotSimulator();
+        }
         if (!document.fullscreenElement) {
             godotWrapper.requestFullscreen().then(() => {
                 // Return keyboard/mouse focus directly to the Godot canvas
-                godotIframe.focus();
+                const activeIframe = document.getElementById('godot-iframe');
+                if (activeIframe) activeIframe.focus();
             }).catch(err => {
                 console.error(`Fullscreen error: ${err.message}`);
             });
@@ -655,6 +694,10 @@
             document.exitFullscreen();
         }
     });
+
+    if (unloadBtn) {
+        unloadBtn.addEventListener('click', unmountGodotSimulator);
+    }
 
     // Automatically updates button text when Esc is pressed or fullscreen changes
     document.addEventListener('fullscreenchange', () => {
@@ -664,39 +707,47 @@
             fsBtn.textContent = 'Fullscreen';
         }
     });
-    
-    const wrapper = document.getElementById('godot-wrapper');
-    const frameBox = document.getElementById('godot-frame-box');
-    const mobileNotice = document.getElementById('mobile-notice');
+
     // 1. Check if browser explicitly flags it as a mobile device
-const isMobileUA = navigator.userAgentData ? navigator.userAgentData.mobile : /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isMobileUA = navigator.userAgentData ? navigator.userAgentData.mobile : /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-// 2. Check if the primary input is a mouse/trackpad (precision pointer)
-const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+    // 2. Check if the primary input is a mouse/trackpad (precision pointer)
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
 
-// 3. Check for desktop platforms (Windows, macOS, Linux, ChromeOS)
-let isDesktopOS = true;
-if (navigator.userAgentData && navigator.userAgentData.platform) {
-    const platform = navigator.userAgentData.platform.toLowerCase();
-    // Exclude mobile OS strings if present
-    if (platform.includes('android') || platform.includes('ios') || platform.includes('ipad')) {
-        isDesktopOS = false;
+    // 3. Check for desktop platforms (Windows, macOS, Linux, ChromeOS)
+    let isDesktopOS = true;
+    if (navigator.userAgentData && navigator.userAgentData.platform) {
+        const platform = navigator.userAgentData.platform.toLowerCase();
+        if (platform.includes('android') || platform.includes('ios') || platform.includes('ipad')) {
+            isDesktopOS = false;
+        }
     }
-}
 
-// True desktop = Not explicitly mobile UA AND has a mouse/trackpad AND is on a desktop OS
-const isActualDesktop = !isMobileUA && hasFinePointer && isDesktopOS;
+    // True desktop = Not explicitly mobile UA AND has a mouse/trackpad AND is on a desktop OS
+    const isActualDesktop = !isMobileUA && hasFinePointer && isDesktopOS;
 
-if (!isActualDesktop) {
-    // Hide simulator and show mobile/tablet notice
-    wrapper.style.display = 'none';
-    if (mobileNotice) mobileNotice.style.display = 'block';
-} else {
-    // Desktop: Safe to inject and boot the Godot iframe
-    frameBox.innerHTML = `
-        <iframe frameborder="0" src="https://itch.io/embed-upload/20563701?color=333333" allowfullscreen="" width="960" height="560"><a href="https://crankyshift.itch.io/mars-jezero">Play Mars-Jezero on itch.io</a></iframe>
-    `;
-}
+    if (!isActualDesktop) {
+        godotWrapper.style.display = 'none';
+        if (mobileNotice) mobileNotice.style.display = 'block';
+    } else {
+        const launchBtn = document.getElementById('godot-launch-btn');
+        if (launchBtn) launchBtn.addEventListener('click', mountGodotSimulator);
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (document.getElementById('godot-iframe')) return;
+                Promise.all([
+                    fetch('game/index.wasm', { cache: 'force-cache', priority: 'low' }).then((r) => r.ok ? r.arrayBuffer() : null),
+                    fetch('game/index.pck', { cache: 'force-cache', priority: 'low' }).then((r) => r.ok ? r.arrayBuffer() : null),
+                ]).then((results) => {
+                    const readyBtn = document.getElementById('godot-launch-btn');
+                    if (results[0] && results[1] && readyBtn && !document.getElementById('godot-iframe')) {
+                        readyBtn.textContent = 'Launch 3D Simulator (Ready)';
+                    }
+                }).catch(() => {});
+            }, 1200);
+        });
+    }
 </script>
 </body>
 </html>

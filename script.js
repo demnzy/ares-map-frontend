@@ -423,29 +423,14 @@
     startBtn.addEventListener('blur', () => { startHover = false; });
 
     /* =====================================================
-       3. CURSOR
-       A scanner ring with ticks. It locks onto START and
-       grows over other buttons and links.
+       3. POINTER INTERACTION (NATIVE CURSOR + DUST/BURSTS)
        ===================================================== */
-    const ring = $('#cRing');
-    const dot = $('#cDot');
-    const rs = { x: -100, y: -100, w: 44, h: 44, r: 22 };
-    let hovering = false;
-    let lockEl = null;
     let lastTrail = { x: 0, y: 0 };
-
-    if (finePointer) document.documentElement.classList.add('has-cursor');
 
     window.addEventListener('pointermove', (e) => {
         if (e.pointerType === 'touch') return;
         mouse.x = e.clientX; mouse.y = e.clientY;
         mouse.nx = e.clientX / view.w; mouse.ny = e.clientY / view.h;
-        ring.classList.add('on'); dot.classList.add('on');
-        const el = e.target.closest && e.target.closest('a, button');
-        hovering = !!el;
-        lockEl = el && el.id === 'start' ? el : null;
-        ring.classList.toggle('lock', !!lockEl);
-        ring.classList.toggle('hover', hovering && !lockEl);
 
         if (!reduce && Math.hypot(e.clientX - lastTrail.x, e.clientY - lastTrail.y) > 9) {
             lastTrail = { x: e.clientX, y: e.clientY };
@@ -457,7 +442,6 @@
     document.documentElement.addEventListener('mouseleave', () => {
         mouse.x = mouse.y = -9999;
         mouse.nx = mouse.ny = 0.5;
-        ring.classList.remove('on'); dot.classList.remove('on');
     });
 
     window.addEventListener('pointerdown', (e) => {
@@ -475,25 +459,6 @@
         }
         if (bursts.length > 300) bursts.splice(0, bursts.length - 300);
     });
-
-    function updateCursor() {
-        if (!finePointer) return;
-        let tx = mouse.x, ty = mouse.y, tw = 44, th = 44, tr = 22;
-        if (lockEl && document.contains(lockEl)) {
-            const b = lockEl.getBoundingClientRect();
-            tx = b.left + b.width / 2; ty = b.top + b.height / 2;
-            tw = b.width + 26; th = b.height + 26; tr = 18;
-        } else if (hovering) {
-            tw = th = 62; tr = 31;
-        }
-        rs.x = lerp(rs.x, tx, 0.3); rs.y = lerp(rs.y, ty, 0.3);
-        rs.w = lerp(rs.w, tw, 0.22); rs.h = lerp(rs.h, th, 0.22); rs.r = lerp(rs.r, tr, 0.22);
-        ring.style.width = rs.w + 'px';
-        ring.style.height = rs.h + 'px';
-        ring.style.borderRadius = rs.r + 'px';
-        ring.style.transform = `translate3d(${rs.x - rs.w / 2}px, ${rs.y - rs.h / 2}px, 0)`;
-        dot.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0)`;
-    }
 
 
     const heroHead = $('#heroHead');
@@ -537,7 +502,14 @@
     }
 
     let lastT = performance.now();
+    let canvasesPaused = false;
+    let rafId = 0;
+
     function frame(t) {
+        if (canvasesPaused) {
+            rafId = 0;
+            return;
+        }
         const step = clamp((t - lastT) / 16.67, 0, 3);
         lastT = t;
         updateScroll();
@@ -550,9 +522,21 @@
 
         drawSpace(t, step);
         if (scroll.hero < 0.98) { renderGlobe(); placeJezero(); }
-        updateCursor();
-        if (!reduce) requestAnimationFrame(frame);
+        if (!reduce) rafId = requestAnimationFrame(frame);
     }
+
+    window.setAresCanvasesPaused = (paused) => {
+        canvasesPaused = Boolean(paused);
+        if (canvasesPaused) {
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = 0;
+            }
+        } else if (!reduce && !rafId) {
+            lastT = performance.now();
+            rafId = requestAnimationFrame(frame);
+        }
+    };
 
     function resize() {
         resizeSpace();
@@ -562,10 +546,10 @@
     resize();
 
     if (reduce) {
-        window.addEventListener('scroll', () => requestAnimationFrame(frame), { passive: true });
+        window.addEventListener('scroll', () => { if (!canvasesPaused) requestAnimationFrame(frame); }, { passive: true });
         frame(performance.now());
     } else {
-        requestAnimationFrame(frame);
+        rafId = requestAnimationFrame(frame);
     }
 
 

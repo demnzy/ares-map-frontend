@@ -120,89 +120,7 @@ button:focus-visible {
   box-shadow: 0 0 0 4px rgba(242, 138, 98, 0.25);
 }
 
-/* ---------- Cursor ---------- */
-.c-ring,
-.c-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
-}
-
-.c-ring {
-  border: 1.5px solid rgba(242, 138, 98, 0.85);
-  border-radius: 50%;
-  transition:
-    opacity 0.2s,
-    background 0.2s,
-    border-color 0.2s;
-}
-
-.c-ring b {
-  position: absolute;
-  background: var(--orange-soft);
-}
-
-.c-ring b:nth-child(1) {
-  left: 50%;
-  top: -8px;
-  width: 1.5px;
-  height: 6px;
-  margin-left: -0.75px;
-}
-
-.c-ring b:nth-child(2) {
-  left: 50%;
-  bottom: -8px;
-  width: 1.5px;
-  height: 6px;
-  margin-left: -0.75px;
-}
-
-.c-ring b:nth-child(3) {
-  top: 50%;
-  left: -8px;
-  height: 1.5px;
-  width: 6px;
-  margin-top: -0.75px;
-}
-
-.c-ring b:nth-child(4) {
-  top: 50%;
-  right: -8px;
-  height: 1.5px;
-  width: 6px;
-  margin-top: -0.75px;
-}
-
-.c-ring.lock {
-  background: rgba(228, 100, 53, 0.14);
-  border-color: var(--orange);
-}
-
-.c-ring.hover {
-  background: rgba(228, 100, 53, 0.2);
-}
-
-.c-dot {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
-  border-radius: 50%;
-  background: var(--orange-soft);
-}
-
-.has-cursor .c-ring.on,
-.has-cursor .c-dot.on {
-  opacity: 1;
-}
-
-.has-cursor,
-.has-cursor * {
-  cursor: none !important;
-}
+/* ---------- Click Ping ---------- */
 
 .ping {
   position: fixed;
@@ -2203,6 +2121,12 @@ button:focus-visible {
   transition: background 0.15s ease;
 }
 
+.godot-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .godot-fs-btn:hover {
   background: rgba(255, 255, 255, 0.2);
 }
@@ -2212,6 +2136,52 @@ button:focus-visible {
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #000;
+}
+
+.godot-launch-cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 1.5rem;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(11, 13, 18, 0.72), rgba(11, 13, 18, 0.88)),
+    url("images/terrain.png") center / cover no-repeat;
+}
+
+.godot-launch-cover h3 {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  color: #f3ede6;
+}
+
+.godot-launch-cover p {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 0.9rem;
+  color: rgba(243, 237, 230, 0.75);
+}
+
+.godot-launch-btn {
+  margin-top: 0.25rem;
+  padding: 0.72rem 1.4rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e86f38, #d45424);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.godot-launch-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
 }
 
 .godot-frame-box iframe {
