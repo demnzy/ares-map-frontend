@@ -2217,15 +2217,15 @@ button:focus-visible {
 }
 
 .swatch-thermal {
-  background: linear-gradient(90deg, rgba(127, 220, 236, 0.25), #29b6f6);
+  background: linear-gradient(90deg, rgba(255, 77, 77, 0.25), #ff3b3b);
 }
 
 .swatch-dust {
-  background: linear-gradient(90deg, rgba(232, 183, 85, 0.25), #f5a623);
+  background: linear-gradient(90deg, rgba(64, 214, 108, 0.25), #2ecc71);
 }
 
 .swatch-radiation {
-  background: linear-gradient(90deg, rgba(255, 138, 144, 0.25), #ff3b3b);
+  background: linear-gradient(90deg, rgba(186, 85, 255, 0.25), #a855f7);
 }
 
 .hazard-scale {
