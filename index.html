@@ -311,19 +311,19 @@
                         <figure class="slide" data-slide="thermal">
                             <img src="images/thermal.png" alt="Red channel cold hazard map at Sol 620, 04:00 local time">
                             <div class="slide-empty"><strong>Cold (R)</strong><span>images/thermal.png not found</span></div>
-                            <figcaption>Red channel (Sol 620, 04:00, ground temp −82.3°C): shadowed terrain and low cold basins highlighted in cyan.</figcaption>
+                            <figcaption>Red data channel (Sol 620, 04:00, ground temp −82.3°C): shadowed terrain and low cold basins (plotted here in cyan; shown in Red inside the 3D simulator).</figcaption>
                         </figure>
 
                         <figure class="slide" data-slide="dust">
                             <img src="images/dust.png" alt="Green channel dust and wind drift map at Sol 620, 04:00 local time">
                             <div class="slide-empty"><strong>Dust (G)</strong><span>images/dust.png not found</span></div>
-                            <figcaption>Green channel (Sol 620, 04:00, optical depth 1.11): wind-driven dust bands settling in low terrain.</figcaption>
+                            <figcaption>Green data channel (Sol 620, 04:00, optical depth 1.11): wind-driven dust bands settling in low terrain (plotted here in amber; shown in Green inside the 3D simulator).</figcaption>
                         </figure>
 
                         <figure class="slide" data-slide="radiation">
                             <img src="images/radiation.png" alt="Blue channel radiation exposure map at Sol 620, 14:00 local time">
                             <div class="slide-empty"><strong>Radiation (B)</strong><span>images/radiation.png not found</span></div>
-                            <figcaption>Blue channel (Sol 620, 14:00, 11.8 µGy/hr): higher cosmic dose on exposed ridges, lower behind crater walls.</figcaption>
+                            <figcaption>Blue data channel (Sol 620, 14:00, 11.8 µGy/hr): higher cosmic dose on exposed ridges, lower behind crater walls (plotted here in crimson; shown in Purple inside the 3D simulator).</figcaption>
                         </figure>
 
                         <figure class="slide" data-slide="validation">
@@ -336,7 +336,7 @@
 
                 <div class="captions">
                     <p><span>Real NASA elevation:</span> Built from HiRISE PDS .IMG elevation files and 4096×4096 16-bit heightmaps.</p>
-                    <p><span>Single RGB payload:</span> One PNG file carries all three environmental hazard scores for fast GPU shader sampling.</p>
+                    <p><span>Single RGB payload:</span> One PNG file carries all three hazard scores in its R, G, and B data channels (plotted as Cyan/Amber/Crimson in the charts above, and Red/Green/Purple in the 3D simulator).</p>
                     <p><span>Engine ready:</span> Exported directly into the live Godot 4 WebGL 2 simulator and route planner above.</p>
                 </div>
             </div>
