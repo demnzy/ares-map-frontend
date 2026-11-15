@@ -409,7 +409,7 @@
                     </table>
                 </div>
 
-                <div class="protocol-grid">
+                <div class="protocol-grid" style="grid-template-columns: 1fr;">
                     <div class="tech-card">
                         <div class="tech-card-head">
                             <h3>FastAPI Contract</h3>
@@ -439,71 +439,6 @@
   },
   "hazard_mask_base64": "iVBORw0KGgoAAAANSUhEUgAA..."
 }</pre>
-                    </div>
-
-                    <div class="tech-card">
-                        <div class="tech-card-head">
-                            <h3>CPU Speed Benchmarks</h3>
-                            <span class="mono-tag">Warm DTM Cache</span>
-                        </div>
-                        <p style="font-size:14.5px; color:var(--muted); margin-bottom:16px;">Measured on CPU after warming the HiRISE terrain cache (1,997.6 ms cold start). Health and validation stats are also served at GET /api/health and GET /api/metrics.</p>
-                        <div class="spec-table-wrap" style="margin-top:0;">
-                            <table class="spec-table">
-                                <thead>
-                                    <tr>
-                                        <th>Operation</th>
-                                        <th>Mean</th>
-                                        <th>Median</th>
-                                        <th>p95</th>
-                                        <th>Output</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><code>MarsWeatherPredictor.predict</code></td>
-                                        <td class="num-cell">4.01 ms</td>
-                                        <td class="num-cell">2.71 ms</td>
-                                        <td class="num-cell">10.28 ms</td>
-                                        <td class="num-cell">6 scalars + Ls</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>synthesize_rgba</code> (256×256)</td>
-                                        <td class="num-cell">25.19 ms</td>
-                                        <td class="num-cell">22.70 ms</td>
-                                        <td class="num-cell">35.49 ms</td>
-                                        <td class="num-cell">178.0 KB PNG</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>synthesize_rgba</code> (512×512)</td>
-                                        <td class="num-cell">97.91 ms</td>
-                                        <td class="num-cell">88.68 ms</td>
-                                        <td class="num-cell">151.36 ms</td>
-                                        <td class="num-cell">667.7 KB PNG</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>synthesize_rgba</code> (1024×1024)</td>
-                                        <td class="num-cell">486.71 ms</td>
-                                        <td class="num-cell">420.68 ms</td>
-                                        <td class="num-cell">774.11 ms</td>
-                                        <td class="num-cell">2,572.0 KB PNG</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>POST /api/forecast</code> (JSON only)</td>
-                                        <td class="num-cell">15.93 ms</td>
-                                        <td class="num-cell">15.58 ms</td>
-                                        <td class="num-cell">19.58 ms</td>
-                                        <td class="num-cell">3.52 ms server</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>POST /api/forecast</code> (256 mask)</td>
-                                        <td class="num-cell">29.50 ms</td>
-                                        <td class="num-cell">27.93 ms</td>
-                                        <td class="num-cell">36.62 ms</td>
-                                        <td class="num-cell">18.98 ms server</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
 
