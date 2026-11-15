@@ -1783,6 +1783,63 @@ button:focus-visible {
 .card .thumb { height: 150px; }
 .meters { border-top: 0; padding-top: 0; }
 
+.hero-head .hero-acr {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: clamp(11px, 1.15vw, 13px);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--orange-soft);
+}
+
+.hero-head p:not(.hero-acr) {
+    margin-top: 8px;
+}
+
+.hero-stage {
+    margin-top: 16px;
+}
+
+.repo-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 18px;
+    align-items: stretch;
+}
+
+.foot > div {
+    max-width: 520px;
+}
+
+.foot p.foot-acr {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--orange-soft);
+    margin-bottom: 6px;
+}
+
+.foot-links {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    font-size: 13.5px;
+    font-weight: 600;
+}
+
+.foot-links a {
+    color: var(--orange-soft);
+}
+
+.foot-links a:hover {
+    color: var(--sand);
+}
+
 @media (max-width: 960px) { .split { gap: 36px; } }
 @media (max-width: 700px) {
     .section { padding: 56px 0; }
