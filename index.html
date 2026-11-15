@@ -345,30 +345,30 @@
         <!-- TECHNICAL SPECIFICATIONS -->
         <section id="specs" class="section">
             <div class="wrap">
-                <p class="eyebrow">Technical specifications</p>
-                <h2>Under the hood: data, model accuracy, and API speed.</h2>
-                <p class="body">Here is the exact engineering breakdown for judges and developers: the NASA dataset compiled from Perseverance MEDA and Curiosity RAD, held-out test scores for our PyTorch weather model (MarsEnvMLP), and response times from the FastAPI server.</p>
+                <p class="eyebrow">Model &amp; Data</p>
+                <h2>How the forecast feeds the hazard masks.</h2>
+                <p class="body">A compact PyTorch model trained on NASA Perseverance MEDA and Curiosity RAD records predicts local surface conditions and feeds the three hazard layers.</p>
 
                 <div class="spec-summary-grid">
                     <div class="stat-box">
                         <div class="k">Training Dataset</div>
                         <div class="v">2,511 Rows</div>
-                        <div class="s">903 NASA bins + 1,608 harmonic grid</div>
+                        <div class="s">Perseverance MEDA &amp; Curiosity RAD</div>
                     </div>
                     <div class="stat-box">
-                        <div class="k">Mean Accuracy</div>
+                        <div class="k">Model Accuracy</div>
                         <div class="v">R² = 0.91</div>
-                        <div class="s">0.9088 across 503 test samples</div>
+                        <div class="s">Across 503 held-out test samples</div>
                     </div>
                     <div class="stat-box">
                         <div class="k">ML Inference</div>
                         <div class="v">2.71 ms</div>
-                        <div class="s">Median CPU time (9 → 128 → 7 MLP)</div>
+                        <div class="s">Median forecast runtime</div>
                     </div>
                     <div class="stat-box">
                         <div class="k">Mask Synthesis</div>
                         <div class="v">22.70 ms</div>
-                        <div class="s">Median 256×256 RGB PNG build</div>
+                        <div class="s">256×256 RGB hazard PNG build</div>
                     </div>
                 </div>
 
@@ -376,9 +376,8 @@
                     <table class="spec-table">
                         <thead>
                             <tr>
-                                <th>Predicted Variable</th>
-                                <th>Error (MAE)</th>
-                                <th>RMSE</th>
+                                <th>Hazard Input</th>
+                                <th>Avg Error (MAE)</th>
                                 <th>Accuracy (R²)</th>
                                 <th>Observed NASA Range</th>
                                 <th>Data Source</th>
@@ -386,52 +385,25 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><code>ground_temp_c</code></td>
+                                <td><strong>Thermal</strong> (Ground Temp)</td>
                                 <td class="num-cell">2.50 °C</td>
-                                <td class="num-cell">3.51 °C</td>
                                 <td class="r2-cell">0.985</td>
                                 <td class="num-cell">−92.0 to +12.5 °C</td>
-                                <td>Perseverance MEDA (CAL_TIRS, 25 sols: Sol 1–1321)</td>
+                                <td>Perseverance MEDA (25 sols)</td>
                             </tr>
                             <tr>
-                                <td><code>air_temp_c</code></td>
-                                <td class="num-cell">2.00 °C</td>
-                                <td class="num-cell">4.26 °C</td>
-                                <td class="r2-cell">0.941</td>
-                                <td class="num-cell">−87.5 to +18.6 °C</td>
-                                <td>Perseverance MEDA (CAL_TIRS)</td>
-                            </tr>
-                            <tr>
-                                <td><code>dust_optical_depth_tau</code></td>
+                                <td><strong>Dust</strong> (Optical Depth)</td>
                                 <td class="num-cell">0.071</td>
-                                <td class="num-cell">0.106</td>
                                 <td class="r2-cell">0.933</td>
                                 <td class="num-cell">0.180 to 2.508</td>
-                                <td>MEDA TIRS longwave emissivity + seasonal dust cycle</td>
+                                <td>Perseverance MEDA + wind drift</td>
                             </tr>
                             <tr>
-                                <td><code>radiation_dose_rate_ugy_hr</code></td>
+                                <td><strong>Radiation</strong> (Dose Rate)</td>
                                 <td class="num-cell">0.11 µGy/hr</td>
-                                <td class="num-cell">0.23 µGy/hr</td>
                                 <td class="r2-cell">0.753</td>
                                 <td class="num-cell">9.65 to 12.98 µGy/hr</td>
-                                <td>Curiosity RAD (1,370 records) + MEDA pressure shielding</td>
-                            </tr>
-                            <tr>
-                                <td><code>wind_speed_mps</code></td>
-                                <td class="num-cell">0.21 m/s</td>
-                                <td class="num-cell">0.38 m/s</td>
-                                <td class="r2-cell">0.933</td>
-                                <td class="num-cell">0.30 to 8.97 m/s</td>
-                                <td>MEDA DER_WS (≤ Sol 315) + harmonic gap fill</td>
-                            </tr>
-                            <tr>
-                                <td><code>wind_bearing_deg</code></td>
-                                <td class="num-cell">7.73°</td>
-                                <td class="num-cell">20.90°</td>
-                                <td class="r2-cell">0.963</td>
-                                <td class="num-cell">0° to 360°</td>
-                                <td>Predicted as sin/cos vector and combined via atan2</td>
+                                <td>Curiosity RAD (1,370 records)</td>
                             </tr>
                         </tbody>
                     </table>
