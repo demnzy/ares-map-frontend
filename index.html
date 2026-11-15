@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARES-MAP | Sol Searchers</title>
     <meta name="description" content="ARES-MAP combines NASA Mars data into one 3D map so astronauts can plan the safest Marswalk. NASA Space Apps Challenge 2026.">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -74,10 +76,9 @@
             <div class="callout left c1"><b style="--c:#7fdcec">R</b><span style="color:#7fdcec">Thermal</span><em style="background:#7fdcec"></em><i style="background:#7fdcec"></i></div>
             <div class="callout left c2"><b style="--c:#e8b755">G</b><span style="color:#e8b755">Dust</span><em style="background:#e8b755"></em><i style="background:#e8b755"></i></div>
             <div class="callout right c1"><i style="background:#ff8a90"></i><em style="background:#ff8a90"></em><span style="color:#ff8a90">Radiation</span><b style="--c:#ff8a90">B</b></div>
-            <div class="callout right c2"><i style="background:#ede6dd"></i><em style="background:#ede6dd"></em><span style="color:#ede6dd">Slope</span><b style="--c:#ede6dd">A</b></div>
         </div>
 
-        <p class="hero-meta"><span>Target: Jezero Crater</span><span>4 hazard layers</span><span>Runs in your browser</span></p>
+        <p class="hero-meta"><span>Target: Jezero Crater</span><span>3 hazard layers</span><span>Runs in your browser</span></p>
 
         <a class="scroll-hint" href="#problem"><span>Scroll to learn more</span>
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l5 5 5-5"/></svg>
@@ -101,7 +102,7 @@
                     <p class="eyebrow">The problem &amp; science mission</p>
                     <h2>Global Mars maps show the whole planet. Astronauts need a map for the next four hours on foot.</h2>
                     <p class="body">As Artemis II showed during its lunar flyby, human explorers observe and connect clues in the field in ways rovers cannot. Future astronauts walking across Jezero Crater's western delta (18.38°N, 77.58°E) to sample ancient river mudstones and crater-rim carbonates will need the same real-time awareness on the ground.</p>
-                    <p class="body">Existing NASA tools like JPL Mars Trek (which offers both 2D and 3D views) and the USGS-NASA Planetary Geologic Mapping Program are built for regional and global planning. They do not layer hourly weather forecasts, wind-blown dust, cosmic radiation, and 15° spacesuit slope limits onto the hyperlocalized 4.1 × 4.1 km walking zone an astronaut explores on a single Marswalk.</p>
+                    <p class="body">Existing NASA tools like JPL Mars Trek (which offers both 2D and 3D views) and the USGS-NASA Planetary Geologic Mapping Program are built for regional and global planning. They do not layer hourly weather forecasts, wind-blown dust, and cosmic radiation onto the hyperlocalized 4.1 × 4.1 km walking zone an astronaut explores on a single Marswalk.</p>
                 </div>
                 <div class="stack">
                     <div class="fact">
@@ -147,13 +148,13 @@
                     </div>
                     <div class="step">
                         <p class="num">3</p>
-                        <h3>Pack four hazards into one image</h3>
-                        <p>Our FastAPI server combines the forecast with HiRISE elevation slopes and shadows, packing all four hazard scores into the Red, Green, Blue, and Alpha channels of one PNG.</p>
+                        <h3>Pack three hazards into one image</h3>
+                        <p>Our FastAPI server combines the forecast with HiRISE elevation and shadows, packing all three hazard scores into the Red, Green, and Blue channels of one PNG.</p>
                     </div>
                     <div class="step">
                         <p class="num">4</p>
                         <h3>Load into the 3D simulator</h3>
-                        <p>The 3D terrain engine drapes that RGBA image over a 4096×4096 heightmap of Jezero Crater to color-code danger zones and plan safe walking routes.</p>
+                        <p>The 3D terrain engine drapes that RGB image over a 4096×4096 heightmap of Jezero Crater to color-code danger zones and plan safe walking routes.</p>
                     </div>
                 </div>
             </div>
@@ -163,8 +164,8 @@
         <section id="layers" class="section">
             <div class="wrap">
                 <p class="eyebrow">Hazard layers</p>
-                <h2>Four hazards packed into one RGBA image.</h2>
-                <p class="body">Instead of sending four separate files to the 3D engine, the backend packs all four hazard layers into one PNG image (dynamic_hazard_mask.png). Every pixel stores a score from 0 (safe) to 1 (high risk) in its red, green, blue, and alpha channels.</p>
+                <h2>Three hazards packed into one RGB image.</h2>
+                <p class="body">Instead of sending separate files to the 3D engine, the backend packs all three environmental hazard layers into one PNG image (dynamic_hazard_mask.png). Every pixel stores a score from 0 (safe) to 1 (high risk) in its red, green, and blue channels.</p>
                 <div class="cards">
                     <article class="card" data-tint="0">
                         <div class="thumb thumb-thermal"></div>
@@ -189,17 +190,8 @@
                         <div class="card-body">
                             <div class="chan" style="--c:#FF8A90"><b>B</b><span><strong>Blue channel</strong>0 sheltered, 1 exposed</span></div>
                             <h3 style="color:#FF8A90">Radiation</h3>
-                            <p>Maps cosmic ray exposure, which stays higher on open ridges and drops inside steep crater walls.</p>
+                            <p>Maps cosmic ray exposure, which stays higher on open ridges and drops inside sheltered crater walls.</p>
                             <p class="layer-inputs"><strong>Inputs:</strong> radiation dose forecast, ground elevation, and open-sky view factor.</p>
-                        </div>
-                    </article>
-                    <article class="card" data-tint="3">
-                        <div class="thumb thumb-slope"></div>
-                        <div class="card-body">
-                            <div class="chan" style="--c:#EDE6DD"><b>A</b><span><strong>Alpha channel</strong>0 flat, 1 blocked (≥15°)</span></div>
-                            <h3>Slope</h3>
-                            <p>Flags ground steeper than 15 degrees, where a bulky pressurized suit can tip over.</p>
-                            <p class="layer-inputs"><strong>Inputs:</strong> HiRISE elevation gradients (1 m/px) normalized to the 15° tipping limit.</p>
                         </div>
                     </article>
                 </div>
@@ -218,42 +210,39 @@
                         <span class="verdict verdict-safe">Safe to walk</span>
                         <h3>Sunlit crater floor</h3>
                         <p class="spot-desc">Science goal: Habitat staging &amp; basalt core sampling.</p>
-                        <p class="spot-meta">Elevation −2,584 m · Slope 1.2° · Open sky 100%</p>
+                        <p class="spot-meta">Elevation −2,584 m · Open sky 100%</p>
                         <ul class="meters">
                             <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:16%;background:#5fd4e8"></i></span><span class="m-level">0.16</span></li>
                             <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:10%;background:#e8b755"></i></span><span class="m-level">0.10</span></li>
                             <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:47%;background:#ff8a90"></i></span><span class="m-level">0.47</span></li>
-                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:8%;background:#ede6dd"></i></span><span class="m-level">0.08</span></li>
                         </ul>
                         <p class="spot-result"><strong>Route planner:</strong> safe afternoon traverse for coring. Before dawn at 04:00 (−82.3°C), cold air pooling in this basin pushes Thermal up to <strong>0.82</strong>.</p>
                     </article>
 
                     <article class="spot">
-                        <span class="verdict verdict-block">Blocked (A = 1.00)</span>
-                        <h3>Steep delta cliff</h3>
+                        <span class="verdict verdict-risk">Sheltered wall</span>
+                        <h3>Delta scarp wall</h3>
                         <p class="spot-desc">Science goal: Ancient river-delta mudstone layer inspection.</p>
-                        <p class="spot-meta">Elevation −2,506 m · Slope 58.4° · Open sky 52%</p>
+                        <p class="spot-meta">Elevation −2,506 m · Open sky 52%</p>
                         <ul class="meters">
                             <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:18%;background:#5fd4e8"></i></span><span class="m-level">0.18</span></li>
                             <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:4%;background:#e8b755"></i></span><span class="m-level">0.04</span></li>
                             <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:53%;background:#ff8a90"></i></span><span class="m-level">0.53</span></li>
-                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:100%;background:#fde047"></i></span><span class="m-level is-high">1.00</span></li>
                         </ul>
-                        <p class="spot-result"><strong>Route planner:</strong> impassable on foot. Anything 15° or steeper clamps Slope to <strong>1.00</strong> so A* pathfinding routes crew safely around cliff obstacles.</p>
+                        <p class="spot-result"><strong>Route planner:</strong> natural crater-wall geometry cuts open-sky view down to 52%, keeping cosmic radiation moderate (<strong>0.53</strong>) while deep shade cools quickly after sunset.</p>
                     </article>
 
                     <article class="spot">
                         <span class="verdict verdict-risk">High radiation</span>
                         <h3>Exposed rim crest</h3>
                         <p class="spot-desc">Science goal: Western crater rim carbonate outcrop sampling.</p>
-                        <p class="spot-meta">Elevation −2,469 m · Slope 6.8° · Open sky 99%</p>
+                        <p class="spot-meta">Elevation −2,469 m · Open sky 99%</p>
                         <ul class="meters">
                             <li><span class="m-name"><b style="--c:#7FDCEC">R</b>Thermal</span><span class="m-bar"><i style="width:13%;background:#5fd4e8"></i></span><span class="m-level">0.13</span></li>
                             <li><span class="m-name"><b style="--c:#E8B755">G</b>Dust</span><span class="m-bar"><i style="width:9%;background:#e8b755"></i></span><span class="m-level">0.09</span></li>
                             <li><span class="m-name"><b style="--c:#FF8A90">B</b>Radiation</span><span class="m-bar"><i style="width:74%;background:#ff8a90"></i></span><span class="m-level is-high">0.74</span></li>
-                            <li><span class="m-name"><b style="--c:#EDE6DD">A</b>Slope</span><span class="m-bar"><i style="width:45%;background:#ede6dd"></i></span><span class="m-level">0.45</span></li>
                         </ul>
-                        <p class="spot-result"><strong>Route planner:</strong> walkable slope, but high elevation and 99% sky exposure push Radiation near the map maximum (<strong>0.75</strong>), limiting crew dwell time on the ridge.</p>
+                        <p class="spot-result"><strong>Route planner:</strong> high elevation and 99% sky exposure push Radiation near the map maximum (<strong>0.75</strong>), limiting crew dwell time on the ridge.</p>
                     </article>
                 </div>
             </div>
@@ -264,7 +253,7 @@
             <div class="wrap">
                 <p class="eyebrow">Terrain and hazard map outputs</p>
                 <h2>What our pipeline generates for the 3D simulator.</h2>
-                <p class="body">Our team is building the main interactive 3D simulator separately. Click through the tabs below to inspect the Jezero Crater terrain meshes, each of the four synthesized RGBA hazard channels, and our weather model's test results against NASA data.</p>
+                <p class="body">Our team is building the main interactive 3D simulator separately. Click through the tabs below to inspect the Jezero Crater terrain meshes, each of the three synthesized RGB hazard channels, and our weather model's test results against NASA data.</p>
 
                 <div class="sim" id="sim">
                     <div class="sim-tabs" role="group" aria-label="Terrain and hazard layer outputs">
@@ -272,7 +261,6 @@
                         <button type="button" class="sim-tab" data-slide="thermal" aria-pressed="false">Cold (R)</button>
                         <button type="button" class="sim-tab" data-slide="dust" aria-pressed="false">Dust (G)</button>
                         <button type="button" class="sim-tab" data-slide="radiation" aria-pressed="false">Radiation (B)</button>
-                        <button type="button" class="sim-tab" data-slide="slope" aria-pressed="false">Slope (A)</button>
                         <button type="button" class="sim-tab" data-slide="validation" aria-pressed="false">Model Validation</button>
                     </div>
 
@@ -286,7 +274,7 @@
                         <figure class="slide" data-slide="thermal">
                             <img src="images/thermal.png" alt="Red channel cold hazard map at Sol 620, 04:00 local time">
                             <div class="slide-empty"><strong>Cold (R)</strong><span>images/thermal.png not found</span></div>
-                            <figcaption>Red channel (Sol 620, 04:00, ground temp −82.3°C): shadowed slopes and low cold basins highlighted in cyan.</figcaption>
+                            <figcaption>Red channel (Sol 620, 04:00, ground temp −82.3°C): shadowed terrain and low cold basins highlighted in cyan.</figcaption>
                         </figure>
 
                         <figure class="slide" data-slide="dust">
@@ -301,11 +289,6 @@
                             <figcaption>Blue channel (Sol 620, 14:00, 11.8 µGy/hr): higher cosmic dose on exposed ridges, lower behind crater walls.</figcaption>
                         </figure>
 
-                        <figure class="slide" data-slide="slope">
-                            <img src="images/slope.png" alt="Alpha channel slope map highlighting cliffs steeper than 15 degrees">
-                            <div class="slide-empty"><strong>Slope (A)</strong><span>images/slope.png not found</span></div>
-                            <figcaption>Alpha channel: yellow zones mark slopes 15° or steeper (1.48% of the 1024×1024 delta map; steepest cliff 63.5°).</figcaption>
-                        </figure>
 
                         <figure class="slide" data-slide="validation">
                             <img src="images/ml_validation.png" alt="PyTorch MarsEnvMLP validation plots compared to NASA Perseverance and Curiosity measurements">
@@ -317,7 +300,7 @@
 
                 <div class="captions">
                     <p><span>Real NASA elevation:</span> Built from HiRISE PDS .IMG elevation files and 4096×4096 16-bit heightmaps.</p>
-                    <p><span>Single RGBA payload:</span> One PNG file carries all four hazard scores for fast GPU shader sampling.</p>
+                    <p><span>Single RGB payload:</span> One PNG file carries all three environmental hazard scores for fast GPU shader sampling.</p>
                     <p><span>Engine ready:</span> Exported to feed the Godot 4 WebGL 2 simulator and route planner.</p>
                 </div>
             </div>
@@ -349,7 +332,7 @@
                     <div class="stat-box">
                         <div class="k">Mask Synthesis</div>
                         <div class="v">22.70 ms</div>
-                        <div class="s">Median 256×256 RGBA PNG build</div>
+                        <div class="s">Median 256×256 RGB PNG build</div>
                     </div>
                 </div>
 
@@ -455,7 +438,7 @@
                             <h3>CPU Speed Benchmarks</h3>
                             <span class="mono-tag">Warm DTM Cache</span>
                         </div>
-                        <p style="font-size:14.5px; color:var(--muted); margin-bottom:16px;">Measured on CPU after warming the HiRISE slope cache (1,997.6 ms cold start). Health and validation stats are also served at GET /api/health and GET /api/metrics.</p>
+                        <p style="font-size:14.5px; color:var(--muted); margin-bottom:16px;">Measured on CPU after warming the HiRISE terrain cache (1,997.6 ms cold start). Health and validation stats are also served at GET /api/health and GET /api/metrics.</p>
                         <div class="spec-table-wrap" style="margin-top:0;">
                             <table class="spec-table">
                                 <thead>
@@ -557,7 +540,7 @@
                         <article class="ref-card repo-card">
                             <span class="ref-badge">Open-Source Frontend</span>
                             <h3>Frontend Repository</h3>
-                            <p>Interactive Mars globe hero, scroll-tracked route line, 6-tab RGBA hazard &amp; 3D terrain showcase, and mission documentation.</p>
+                            <p>Interactive Mars globe hero, scroll-tracked route line, 5-tab RGB hazard &amp; 3D terrain showcase, and mission documentation.</p>
                             <div class="ref-id">github.com/demnzy/ares-map-frontend</div>
                             <a class="ref-link" href="https://github.com/demnzy/ares-map-frontend" target="_blank" rel="noopener">View Frontend Repo on GitHub &rarr;</a>
                         </article>
@@ -565,7 +548,7 @@
                         <article class="ref-card repo-card">
                             <span class="ref-badge">Open-Source Backend &amp; ML</span>
                             <h3>Backend &amp; ML Repository</h3>
-                            <p>NASA PDS MEDA/RAD pipeline, PyTorch MarsEnvMLP regressor, HiRISE RGBA hazard synthesizer, FastAPI server, and 3D mesh exporters.</p>
+                            <p>NASA PDS MEDA/RAD pipeline, PyTorch MarsEnvMLP regressor, HiRISE RGB hazard synthesizer, FastAPI server, and 3D mesh exporters.</p>
                             <div class="ref-id">github.com/demnzy/ares-map-backend</div>
                             <a class="ref-link" href="https://github.com/demnzy/ares-map-backend" target="_blank" rel="noopener">View Backend Repo on GitHub &rarr;</a>
                         </article>
@@ -579,7 +562,7 @@
             <div class="wrap">
                 <p class="eyebrow">Built for the Marswalk &amp; 3D Engine</p>
                 <h2>Designed for astronauts on foot, spacesuit limits, and live 3D rendering.</h2>
-                <p class="body">ARES-MAP works as a pre-EVA habitat briefing display, a carried crew field tablet, or a compact visor HUD overlay. Because pressurized suits restrict bending and can tip on steep rubble, the 3D scene layers live weather onto high-resolution terrain meshes so A* pathfinding routes two-person buddy teams between science stations while avoiding cliffs 15° or steeper and hazard pockets.</p>
+                <p class="body">ARES-MAP works as a pre-EVA habitat briefing display, a carried crew field tablet, or a compact visor HUD overlay. The 3D scene layers live weather onto high-resolution terrain meshes so A* pathfinding routes two-person buddy teams between science stations while avoiding cold basins, dust haze, and high-radiation pockets.</p>
                 <div class="cards three">
                     <article class="tile">
                         <p class="big">4096 px</p>
@@ -594,7 +577,7 @@
                     <article class="tile">
                         <p class="big">WebGL 2</p>
                         <h3>Real-time shader &amp; route planning</h3>
-                        <p>Drives our interactive Three.js 3D route explorer and Godot 4 Compatibility (COOP/COEP) client shaders (ares_terrain.gdshader), unpacking the RGBA mask in real time to flag 15° suit limits, cold basins, radiation ridges, and dust haze.</p>
+                        <p>Drives our interactive Three.js 3D route explorer and Godot 4 Compatibility (COOP/COEP) client shaders (ares_terrain.gdshader), unpacking the RGB mask in real time to flag cold basins, radiation ridges, and dust haze.</p>
                     </article>
                 </div>
             </div>

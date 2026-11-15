@@ -144,27 +144,20 @@
         let target = -1;
         if (hoverCard >= 0) target = hoverCard;
         else if (lay.top < H * 0.6 && lay.bottom > H * 0.4) {
-            target = Math.min(3, Math.floor(clamp((H * 0.6 - lay.top) / (lay.height + H * 0.2)) * 4));
+            target = Math.min(2, Math.floor(clamp((H * 0.6 - lay.top) / (lay.height + H * 0.2)) * 3));
         }
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             tintAmt[i] = lerp(tintAmt[i], i === target ? 1 : 0, 0.06);
             const a = tintAmt[i];
             if (a < 0.01) continue;
             const c = tintColors[i];
-            if (i === 3) {
-                ctx.globalAlpha = 0.1 * a;
-                ctx.fillStyle = hatchPattern;
+            const spots = [[W * 0.22, H * 0.62, W * 0.5], [W * 0.82, H * 0.32, W * 0.4]];
+            for (const [x, y, r] of spots) {
+                const tg = ctx.createRadialGradient(x, y, 0, x, y, r);
+                tg.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${0.22 * a})`);
+                tg.addColorStop(1, `rgba(${c[0]},${c[1]},${c[2]},0)`);
+                ctx.fillStyle = tg;
                 ctx.fillRect(0, 0, W, H);
-                ctx.globalAlpha = 1;
-            } else {
-                const spots = [[W * 0.22, H * 0.62, W * 0.5], [W * 0.82, H * 0.32, W * 0.4]];
-                for (const [x, y, r] of spots) {
-                    const tg = ctx.createRadialGradient(x, y, 0, x, y, r);
-                    tg.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},${0.22 * a})`);
-                    tg.addColorStop(1, `rgba(${c[0]},${c[1]},${c[2]},0)`);
-                    ctx.fillStyle = tg;
-                    ctx.fillRect(0, 0, W, H);
-                }
             }
         }
 
@@ -382,11 +375,6 @@
                 g.addColorStop(1, `rgba(${c},0)`);
                 gctx.fillStyle = g;
                 gctx.fillRect(0, 0, N, N);
-            }
-            gctx.strokeStyle = `rgba(237,230,221,${0.5 * teaser})`;
-            gctx.lineWidth = 1.5;
-            for (let i = -N; i < N; i += 11) {
-                gctx.beginPath(); gctx.moveTo(N * 0.55 + i, N * 0.95); gctx.lineTo(N * 0.55 + i + N * 0.3, N * 0.62); gctx.stroke();
             }
             gctx.restore();
         }
@@ -619,12 +607,11 @@
         if (img.complete && img.naturalWidth > 0) ok();
     });
 
-    // three-spots meters, built from each card's data-v (R, G, B, A x100)
+    // three-spots meters, built from each card's data-v (R, G, B x100)
     const rows = [
         ['R', 'Thermal', '#7fdcec'],
         ['G', 'Dust', '#e8b755'],
-        ['B', 'Radiation', '#ff8a90'],
-        ['A', 'Slope', '#ede6dd']
+        ['B', 'Radiation', '#ff8a90']
     ];
     $$('.spot').forEach((spot) => {
         if (!spot.dataset.v) return;
