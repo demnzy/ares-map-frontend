@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARES-MAP | Sol Searchers</title>
-    <meta name="description" content="ARES-MAP turns NASA Perseverance, Curiosity, and HiRISE terrain data into a 3D hazard map of Jezero Crater so astronauts can plan safer Marswalks.">
+    <meta name="description" content="ARES-MAP combines NASA Mars data into one 3D map so astronauts can plan the safest Marswalk. NASA Space Apps Challenge 2026.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,52 +12,75 @@
 </head>
 <body>
 
-    <canvas id="bg" aria-hidden="true"></canvas>
+    <!-- Moving background: stars, dust, Mars ridges. Reacts to scroll and mouse. -->
+    <canvas id="space" aria-hidden="true"></canvas>
 
-    <!-- Custom cursor (desktop pointer only) -->
-    <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+    <!-- Route line that draws itself down the right edge as you scroll -->
+    <div class="route" aria-hidden="true">
+        <svg viewBox="0 0 20 1000" preserveAspectRatio="none">
+        <path class="route-track" d="M10 0 C 2 120, 18 200, 10 330 S 2 560, 10 680 S 18 880, 10 1000" pathLength="1"/>
+        <path class="route-line" id="routeLine" d="M10 0 C 2 120, 18 200, 10 330 S 2 560, 10 680 S 18 880, 10 1000" pathLength="1"/>
+        </svg>
+        <i id="routeDot"></i>
+    </div>
+
+    <!-- Custom cursor -->
+    <div class="c-ring" id="cRing" aria-hidden="true"><b></b><b></b><b></b><b></b></div>
+    <div class="c-dot" id="cDot" aria-hidden="true"></div>
 
     <!-- NAV -->
-    <header class="nav">
-        <div class="wrap nav-inner">
-            <a href="#top" class="brand">
-                <img src="logo.png" alt="" class="brand-mark">
-                <span>SOL SEARCHERS</span>
-            </a>
-            <nav class="nav-links" aria-label="Main">
-                <a href="#problem">The problem</a>
-                <a href="#how">How it works</a>
-                <a href="#layers">Hazard layers</a>
-                <a href="#simulator">Terrain &amp; maps</a>
-                <a href="#specs">Tech specs</a>
-                <a href="#simulator" class="btn btn-main btn-sm">Launch 3D Simulator</a>
-            </nav>
+    <header class="nav" id="nav">
+        <div class="nav-inner">
+        <a href="#top" class="brand">
+            <img src="logo.png" alt="">
+            <span>SOL SEARCHERS</span>
+        </a>
+        <nav class="nav-links" aria-label="Main">
+            <a href="#problem">The problem</a>
+            <a href="#how">How it works</a>
+            <a href="#layers">Hazard layers</a>
+            <a href="#simulator">Terrain &amp; maps</a>
+            <a href="#specs">Tech specs</a>
+            
+        </nav>
         </div>
     </header>
 
-    <main id="top">
+    <main>
 
-        <!-- HERO -->
-        <section class="hero">
-            <div class="wrap hero-inner">
-                <div class="hero-copy">
-                    <p class="eyebrow">NASA Space Apps Challenge 2026</p>
-                    <h1>Plan a safe <span>Marswalk</span> before you step outside.</h1>
-                    <p class="lead">ARES-MAP turns weather, radiation, and terrain data from NASA's Mars missions into a 3D hazard map of Jezero Crater, helping astronauts check surface conditions for any Martian day and hour.</p>
-                    <div class="cta-row">
-                        <a href="#simulator" class="btn btn-main">Launch 3D Simulator</a>
-                        <a href="#specs" class="btn btn-line">Jump to technical specs</a>
-                    </div>
-                    <p class="small">Landing site: Jezero Crater's western delta (18.38°N, 77.58°E), built from Perseverance weather logs, Curiosity radiation readings, and 1-meter HiRISE elevation maps.</p>
-                </div>
-                <div class="hero-logo">
-                    <!-- The whole sun drifts toward the cursor. The lines inside it never move on their own. -->
-                    <div class="sun" id="sun">
-                        <img src="logo.png" alt="Sol Searchers Mars emblem">
-                    </div>
-                </div>
+        <!-- FIRST SCREEN -->
+        <section class="hero" id="top">
+        <div class="hero-head" id="heroHead">
+            <h1>ARES-MAP</h1>
+            <p>Plan your Marswalk before you take the first step.</p>
+        </div>
+
+        <div class="hero-stage" id="heroStage">
+            <div class="globe-wrap" id="globeWrap">
+            <canvas id="globe" width="420" height="420" aria-label="A slowly rotating globe of Mars. Drag to spin it."></canvas>
+
+            <div class="jezero" id="jezero"><i></i><span>Jezero Crater</span></div>
+
+            <!-- CHANGE href to your game's page or URL -->
+            <a class="start" id="start" href="#simulator" aria-label="Start the simulator">
+                <span class="start-body">
+                <strong>START</strong>
+                <small>Launch simulator</small>
+                </span>
+            </a>
             </div>
+
+            <div class="callout left c1"><b style="--c:#7fdcec">R</b><span style="color:#7fdcec">Thermal</span><em style="background:#7fdcec"></em><i style="background:#7fdcec"></i></div>
+            <div class="callout left c2"><b style="--c:#e8b755">G</b><span style="color:#e8b755">Dust</span><em style="background:#e8b755"></em><i style="background:#e8b755"></i></div>
+            <div class="callout right c1"><i style="background:#ff8a90"></i><em style="background:#ff8a90"></em><span style="color:#ff8a90">Radiation</span><b style="--c:#ff8a90">B</b></div>
+            <div class="callout right c2"><i style="background:#ede6dd"></i><em style="background:#ede6dd"></em><span style="color:#ede6dd">Slope</span><b style="--c:#ede6dd">A</b></div>
+        </div>
+
+        <p class="hero-meta"><span>Target: Jezero Crater</span><span>4 hazard layers</span><span>Runs in your browser</span></p>
+
+        <a class="scroll-hint" href="#problem"><span>Scroll to learn more</span>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l5 5 5-5"/></svg>
+        </a>
         </section>
 
         <!-- DATA SOURCES STRIP -->
@@ -142,7 +165,7 @@
                 <h2>Four hazards packed into one RGBA image.</h2>
                 <p class="body">Instead of sending four separate files to the 3D engine, the backend packs all four hazard layers into one PNG image (dynamic_hazard_mask.png). Every pixel stores a score from 0 (safe) to 1 (high risk) in its red, green, blue, and alpha channels.</p>
                 <div class="cards">
-                    <article class="card">
+                    <article class="card" data-tint="0">
                         <div class="thumb thumb-thermal"></div>
                         <div class="card-body">
                             <div class="chan" style="--c:#7FDCEC"><b>R</b><span><strong>Red channel</strong>0 warm, 1 freezing</span></div>
@@ -151,7 +174,7 @@
                             <p class="layer-inputs"><strong>Inputs:</strong> ground temperature forecast, sun angle shadows, elevation, and night cooling.</p>
                         </div>
                     </article>
-                    <article class="card">
+                    <article class="card" data-tint="1">
                         <div class="thumb thumb-dust"></div>
                         <div class="card-body">
                             <div class="chan" style="--c:#E8B755"><b>G</b><span><strong>Green channel</strong>0 clear, 1 heavy dust</span></div>
@@ -160,7 +183,7 @@
                             <p class="layer-inputs"><strong>Inputs:</strong> dust optical depth (τ), wind speed, wind bearing, and low-ground settling.</p>
                         </div>
                     </article>
-                    <article class="card">
+                    <article class="card" data-tint="2">
                         <div class="thumb thumb-radiation"></div>
                         <div class="card-body">
                             <div class="chan" style="--c:#FF8A90"><b>B</b><span><strong>Blue channel</strong>0 sheltered, 1 exposed</span></div>
@@ -169,7 +192,7 @@
                             <p class="layer-inputs"><strong>Inputs:</strong> radiation dose forecast, ground elevation, and open-sky view factor.</p>
                         </div>
                     </article>
-                    <article class="card">
+                    <article class="card" data-tint="3">
                         <div class="thumb thumb-slope"></div>
                         <div class="card-body">
                             <div class="chan" style="--c:#EDE6DD"><b>A</b><span><strong>Alpha channel</strong>0 flat, 1 blocked (≥15°)</span></div>
@@ -572,12 +595,12 @@
     </main>
 
     <footer class="footer">
-        <div class="wrap foot-inner">
-            <img src="logo-b.jpg" alt="Sol Searchers" class="foot-logo">
-            <div class="foot-text">
-                <p class="foot-title">ARES-MAP</p>
-                <p>Built by Sol Searchers for the 2026 NASA Space Apps Challenge, "Interplanetary Survival Guide: Martian Map".</p>
-            </div>
+        <div class="wrap foot">
+        <img src="logo.png" alt="Sol Searchers">
+        <div>
+            <p class="foot-title">ARES-MAP</p>
+            <p>Built by Sol Searchers for the 2026 NASA Space Apps Challenge, "Interplanetary Survival Guide: Martian Map".</p>
+        </div>
         </div>
     </footer>
 
